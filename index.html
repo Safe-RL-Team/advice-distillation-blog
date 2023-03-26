@@ -23,16 +23,140 @@
   <p>We can also cite <dt-cite key="gregor2015draw"></dt-cite> external publications.</p>
 
   <h1>Introduction</h1>
-  <p>Text for paragraph 2</p>
+
+  <p>Reinforcement Learning <dt-cite key="suttonbarto96!?"/> is a technique for allowing agents to explore their environments
+    and learn strategies for maximizing the amount of reward they collect from the environment.</p>
+
+  TODO: explain what safe rl is and make it clear that this paper is not really about safe rl. A discussion on how this could
+  be made to work in <b>safe</b> context is at the end
+
+  TODO: explain normally how RL agents learn: by random exploration, Q Learning & Function approximation for large problem setup.
+  Explain what are samples.
+
+  <p>While RL is innovative in the approach, it has the downside that it is very sample heavy<dt-cite key="sampleheavy!?"/>.
+    TODO: explain what heady is. Show examples
+    Usually, the more complex the problem the higher number of samples an agent requires learning from.
+  There were approaches to making an agent learn faster <dt-cite key="learngaster!?"/> and or smarter<dt-cite key="learnsmarter!?"/></p>
+
+  <p>This is in stark contrast to how humans learn, though. Humans learn by imitating what their peers are doing <dt-cite key="paper_cit_9"/>
+    or by being taught, typically by more expert peers (e.g. going to school, university or having a coach).
+    During the learning process, students are receiving constant feedback from their peers to make sure their strategies for
+    solving tasks at hand are appropriate.
+    The experts also usually use a complex stepwise strategy for teaching. The student starts with some very basic training and gets
+    introduced to more complex tasks after he has a pretty good understanding on how to solve easier tasks.</p>
+  TODO: talk about dopamine
+
+  <p>Humans typically learn faster and require fewer samples.</p>
+
+  <p>The paper suggests solving issue of high number of samples by enabling agents to follow a similar learning strategy.
+  More concretely, agents are made teachable. They learn how to accept instructions from humans that act as their teachers.
+  The teachers are giving instructions to the agent on how to solve intermediary steps of a task and are not allowed to directly
+  control the agent's movements. The paper calls these instructions <b>advice</b></p>
+
+  <p>Similarly to the stepwise school curriculum of humans, the agents are trained on various levels of complexity of
+  this <b>advice</b>.
+  The paper suggests 3 steps of learning:
+    <ol>
+      <li><b>Grounding</b> - teaching the agent how to follow, simple, <i>low level <b>advice</b></i></li>
+      <li><b>Improvement</b> - teaching the grounded agent to follow more complex, <i>higher level <b>advice</b></i></li>
+      <li><b>Evaluation</b> - removing the teacher completely and allow the agent to interact with its environment independently</li>
+    </ol>
+  </p>
+
+  <p>The paper makes the claim that it [proposes a framework for training automated agents using similarly
+    rich interactive supervision] that we do not regard as being true. The advice implemented in the codebase not rich at all,
+    see @Method. We will discuss in the before last paragraph a suggestion on how to extend this to a more rich language.
+  </p>
+  TODO Talk about requiring less samples and also requiring less complex environments for learning.
+
+  <p>This is achieved via augmenting the reward signal typical in RL setting. The teacher has the ability to present a
+    reward to the agent depending on how well it is following the given advice.</p>
+
+  <p>To understand how this work, we will
+  present the <b>Coaching-Augmented Markov Decision Process</b> formalism in the next section. We will then explain how
+  this formalism is used to leverage this tiered structure of learning using <b>Off-policy Learning</b><dt-cite key="off-policy-learning!?"/>
+  We will then present our contribution to how we made the algorithm make use of <b>On policy Learning</b><dt-cite key="on-policy-learning!?"/>.
+  We will present some preliminary results, talk about the challenges we faced and then open up a discussions section.
+  </p>
+
+  TODO: Paper suggests tackling this issues by making the agent teachable. This means, make possible for humans to interact in
+  an indirect way with the agent, by providing instructions that the agent should be able to learn.
+
+  <p nolongerrelevant>The original paper we investigated <dt-cite key="teachablerrl!?"/>suggests using human interaction in a similar way
+    that humans are coached. A <b>teacher</b> could be used to provide instructions called <b>advice</b> to the agent.
+
+    Idea:
+    1. agent becomes low level advice which has 2 purposes.
+        1. Makes the agent follow the teacher's instruction
+        2. However, this is done in a reduced environment, reducing the number of samples that the agent requires for learning
+    2. After the agent can follow this low level advice, higher level of advice is provided, increasing the complexity of
+        1. Instructions the agent can follow
+        2. problems the agent can solve
+
+  </p>
+  <p nolongerrelevant>
+    This general approach with the advantage that the agent can take advantage of already existing knowledge hopefully speeding up the learning process.
+  </p>
+  <p nolongerrelevant>Having a <b>human in the loop</b>raises the issue of cost TODO: improve. </p>
+
+
 
   <h1>Background</h1>
-  <p>Text for paragraph 3</p>
+  <h2>Coaching-Augmented Markov Decision Processes</h2>
+  <p>RL typically works by implementing the <b>Markov Decision Process</b>formalism. The MDP is defined as a tuple
+    {S, A, T, R, ρ, γ, p} where
+    <ol>
+      <li>S is the <i>state space</i> and represents valid positions where the agent could be found at any time</li>
+      <li>A(s) is the <i>action space</i> and represents the valid actions that an agent can take being in a particular state</li>
+      <li>T(s, a, s) is the <i>transition dynamic</i></li>
+      <li>R(s, a) is the <i>reward</i> that an agent receives being and state s and executing action a</li>
+      <li>ρ(s<sub>0</sub>) is the <i>initial state distribution</i>representing where the agent starts each episode</li>
+      <li>γ is the <i>discount factor</i> balancing how important are future rewards vs immediate ones</li>
+      <li>p(τ) is the <i>distribution over tasks</i> i.e. what kind of task the agent is supposed to solve</li>
+    </ol>
+  </p>
 
-  <h2>Problem setting</h2>
-  <p>Text for paragraph 3</p>
+  <p>The agent interacts with the environment and he collects <b>trajectories</b> of the shape
+    D = {s<sub>0</sub>,a<sub>0</sub>,r<sub>1</sub>,s<sub>1</sub>,a<sub>1</sub>,r<sub>2</sub>,··· ,s<sub>H-1</sub>,a<sub>H-1</sub>,r<sub>H</sub>}<sub>j=1</sub><sup>N</sup>.
+    The objective of a multi task <b>MDP</b> is to maximize the ammount of future discounted rewards. Formally, it looks for</p>
+    <p>
+
+      max <sub>θ</sub> <∑<sub>t=0</sub><sup>∞</sup>  γ<sup>t</sup>r(s<sub>t</sub>, a<sub>t</sub>, τ)> <sub>a<sub>t</sub>∼π<sub>θ</sub>(.|s<sub>t</sub>, τ)</sub>
+
+    </p>
+
+  <p>
+  where &lt;X&gt; represents the expected value the random variable X.
+  </p>
+
+  <p>The paper extends the classical <b>MDP</b> by providing two extensions:
+  <ol>
+    <li>C = {c<sub>t</sub>}, the set of <i>coaching functions</i>
+    where c<sub>t</sub> represents advice given to the agent at time <i>t</i>.</li>
+    <li>R<sub>CMDP</sub>=R(s,a) + R<sub>coach</sub>(s,a), where R(s,a) is the previous reward presented by the environment and
+    R<sub>coach</sub>(s,a) represents the added reward the coach provides if the agent follows his advice</li>
+  </ol>
+  </p>
+  <p>
+
+    Like this, we formally define the <b>Coaching Augmented MDP (CAMP)</b> = {S, A, T, R<sub>CMDP</sub>, ρ, γ, p, C}
+  </p>
+
+  <p>
+    The new optimization target now becomes
+  </p>
+  <p>max <sub>θ</sub> <∑<sub>t=0</sub><sup>∞</sup>  γ<sup>t</sup>r(s<sub>t</sub>, a<sub>t</sub>, τ)> <sub>a<sub>t</sub>∼π<sub>θ</sub>(.|s<sub>t</sub>, τ, c<sub>t</sub>)</sub></p>
+
+  <p>representing an agent that interracts with the environment and has access to an advice presented under the form of
+    the coaching function c<sub>t</sub>
+   </p>
 
   <h1>Method</h1>
-  <p>Text for paragraph 3</p>
+  <p>
+    1. Grounding
+    2. Distillation
+    3. Evaluation
+  </p>
 
   <h1>Experimental setup</h1>
   <p>Text for paragraph 3</p>
