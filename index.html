@@ -21,6 +21,9 @@
 
 
 
+
+
+
 </script>
 
 <dt-article>
@@ -176,17 +179,19 @@
         called
         <b>θ</b> and is usually implemented by a probability distribution on the set <b>A</b>.
 
-        The agent thus interacts with the environment and collects <b>trajectories</b> of the shape
-        D = {s<sub>0</sub>,a<sub>0</sub>,r<sub>1</sub>,s<sub>1</sub>,a<sub>1</sub>,r<sub>2</sub>,···
-        ,s<sub>H-1</sub>,a<sub>H-1</sub>,r<sub>H</sub>}<sub>j=1</sub><sup>N</sup>.
-    </p>
+        The agent thus interacts with the environment and collects <b>trajectories</b> of the shape</p>
+    <dt-code block>
+        D = {(s<sub>0</sub>,a<sub>0</sub>,r<sub>1</sub>),(s<sub>1</sub>,a<sub>1</sub>,r<sub>2</sub>),···
+        ,(s<sub>H-1</sub>,a<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.
+    </dt-code>
+
 
     <h3>Solving the <b>MDP</b></h3>
     <p>The objective of a multi task <b>MDP</b> is to find the <b>policy θ<i></i></b> that maximizes the amount of
         future discounted rewards. Formally, it looks for</p>
     <p>
 
-        max <sub>θ</sub>[<b>E</b><sub>a<sub>t</sub>∼π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ)</sub>(∑<sup>∞</sup><sub>t=0</sub>
+        max<sub>θ</sub> [<b>E</b><sub>a<sub>t</sub>∼π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ)</sub>(∑<sup>∞</sup><sub>t=0</sub>
         γ<sup>t</sup>r(s<sub>t</sub>, a<sub>t</sub>, τ)>)]
 
     </p>
@@ -226,8 +231,9 @@
 
     <p><br/>c<sub>j</sub> used in the paper is either:
     <ol>
-        <li>Directional Advice <i>(Up (0,1), Down(0, -1), Left(-1, 0) or Right(1, 0)</i></li>
-        <li>Cardinal Waypoint Advice <i>(e.g. Go To (3,1))</i></li>
+        <li>Cardinal Advice <i>(Up (0,1), Down(0, -1), Est(-1, 0) or West(1, 0)</i></li>
+        <li>Directional Advice <i>(0.5, 0.5)</i></li>
+        <li>Waypoint Advice <i>(e.g. Go To (3,1))</i></li>
     </ol>
     </p>
 
@@ -235,19 +241,28 @@
 
     <p>
 
-        Like this, we formally define the <b>Coaching Augmented MDP (CAMP)</b> = {S, A, T, R<sub>CMDP</sub>, ρ, γ, p, C}
+        Like this, we formally define the <b>Coaching Augmented MDP (CAMP)</b> = {S, A, T, R<sub>CMDP</sub>, ρ, γ, p,
+        C}.
+
+        The agent then captures trajectories of the shape:
     </p>
+    <dt-code block>
+        <p>D = {(s<sub>0</sub>,a<sub>0</sub>,c<sub>0</sub>
+            ,r<sub>1</sub>),(s<sub>1</sub>,a<sub>1</sub>,c<sub>1</sub>,r<sub>2</sub>),···
+            ,(s<sub>H-1</sub>,a<sub>H-1</sub>, c<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.</p>
+    </dt-code>
 
     <p>
         The new optimization problem is to find the <i>best</i> policy <b>θ</b> that maximizes rewards from <b>both</b>
         the environment
         and the coaching functions i.e.
     </p>
-    <p>max <sub>θ</sub>[<b>E</b><sub>a<sub>t</sub>∼π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ,
-        c<sub>t</sub>)</sub>(∑<sup>∞</sup><sub>t=0</sub> γ<sup>t</sup>r(s<sub>t</sub>, a<sub>t</sub>, τ)>)]</p>
+    <p>max<sub>θ</sub> [<b>E</b><sub>a<sub>t</sub>∼π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ,
+        c<sub>t</sub>)</sub>(∑<sup>∞</sup><sub>t=0</sub> γ<sup>t</sup>r(s<sub>t</sub>, a<sub>t</sub>, c<sub>t</sub>,
+        τ)>)]</p>
 
     <p>representing an agent that interacts with the environment and has access to advice presented under the form of
-        the coaching function c<sub>t</sub>
+        the coaching function c<sub>t</sub>.
     </p>
 
     <p>The big advantage of <b>CMDP</b> to plain <b>MDP</b> is that it formalizes the interaction of the agent with
@@ -326,20 +341,99 @@
     <p>i.e. a policy that can take the state s, target τ and the <i>low level</i> advice c<sub>t</sub> that provides
         a probability distribution of next actions.</p>
 
-    <h3>Improvement</h3>
-    <p>The main objective of grounding is to make the agent accept <i>higher level, more complex and more abstract</i>
-        <b>advice</b>. Ideally, we would like the learning process to be sped up by the <i>already grounded</i>
-        <b>θ<sub>grounded</sub></b> policy.</p>
+    TODO: talk on how advice is actually inputted in the actor mlp
 
-    <p>This can be accomplished two ways:</p>
+    <h3><b>Distillation</b> to other types of advice</h3>
+    <p>Once we have a policy able to interpret the simplest type of advice, we can use it to quicker teach the agent
+        other types of advice.
+    </p>
+    <p>The process of using a type of advice to quicker learn another one is called <b>distillation</b> and represents
+        the key innovation of this paper.</p>
+
+    <p>Formally, the agent gathers trajectories of the shape:</p>
     <p>
+        D = { (s<sub>0</sub>, a<sub>0</sub>,c<sup>l</sup><sub>0</sub>, c<sup>h</sup><sub>0</sub>, r<sub>1</sub>),
+        (s<sub>1</sub>, a<sub>1</sub>,c<sup>l</sup><sub>1</sub>, c<sup>h</sup><sub>1</sub>, r<sub>2</sub>),···,
+        (s<sub>H-1</sub>,a<sub>H-1</sub>, c<sup>l</sup><sub>H-1</sub>, c<sup>h</sup><sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.
+    </p>
+
+    <p>
+        c<sup>l</sup><sub>t</sub> represents the <b>low level</b><i> advice</i> while c<sup>h</sup><sub>t</sub>
+        represents the
+        <b>high level, more complex</b> type of <i>advice</i>.
+    </p>
+
+    <p><b>Distillation</b> can be achieved using two types of learning:
     <ol>
-        <li><b>on-policy learning</b> - done the extension we implemented</li>
-        <li><b>off-policy learning</b> - done by spawning a new agent that learns by using
-            the <b>θ<sub>grounded</sub></b> policy
+        <li>using <i>off-policy actor critic</i> learning - done mostly codebase accompanying the paper</li>
+        <li>using <i>on-policy actor critic</i>learning combined with supervised learning of the mapping from
+            <i>low level <b>to</b> high level advice</i> learning - done in the code extension we implemented
         </li>
     </ol>
     </p>
+    <p>In the first method, the new to learned policy π<sub>Φ<sub>new</sub></sub> is a newly initialized policy. The
+        agent
+        explores the environment using <b>Φ<sub>new</sub></b> but learns by using the off-policy <b>θ<sub>grounded</sub></b>.
+        This approach comes with the fact that the exploration/exploitation dilemma basically is <b>reset</b>. The agent
+        is forced
+        to execute enough random exploration. By having enough trajectories, such that the off-policy offloading
+        carries over the grounded knowledge base.
+    </p>
+    <p>We tried to tackle this issue in our implementation. We reused the already existing
+        <b>θ<sub>grounded</sub></b> by learning a mapper from the <i>new</i> type of advice to the <i>old one</i>.
+        Like this, the old policy continues  to work because of no change in the structure of parameters.</p>
+    <p>
+        The mapping from c<sup>h</sup><sub>t</sub> to c<sup>l</sup><sub>t</sub> we learned via supervised learning.
+        Our reasoning was that we can take advantage of the existing pairs (c<sup>h</sup><sub>t</sub>,
+        c<sup>l</sup><sub>t</sub>)
+        that can be learned in a supervised way.</p>
+    <p>The expectation was then that <b>θ<sub>grounded, high level -> low level</sub></b> would start from a higher
+        baseline than
+        <b>Φ<sub>new</sub></b>. This should be measurable in experiments.
+    </p>
+
+    <p>The target of grounding is thus achieved by having a well grounded policy. This can accept multiple types of
+    advice. </p>
+    <p>π<sub>Φ</sub>(&centerdot;|s<sub>t</sub>, τ, <b><u>c<sub>t</sub></u></b>)</p>
+    <p> where <b><u>c<sub>t</sub></u></b> represents the tuple
+        (c<sup>l</sup><sub>t</sub>, c<sup>h<sub>1</sub></sup><sub>t</sub>,  c<sup>h<sub>2</sub></sup><sub>t</sub>, ...).</p>
+
+    <h3>Improvement</h3>
+    <p>The ultimate goal is to obtain a policy</p>
+    <p>π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ)</p>
+    <p>which does not require the coaching functions. The paper uses the already explained <b>distillation</b> technique
+        to learn such a policy.</p>.
+    <p>
+        Distillation can be done either:
+    <ol>
+        <li>by distilling from the grounded policy to another intermediary policy that accepts even more complex, abstract,
+            and sparse type of advice
+        </li>
+    <p>OR</p>
+        <li>by distilling to no advice, taking advantage of the already existing policies.</li>
+    </ol>
+    </p>
+
+    <p>Even though the agent collects </p>
+    <p> D = { (s<sub>0</sub>, a<sub>0</sub>, c<sub>0</sub>, r<sub>1</sub>),
+        (s<sub>1</sub>, a<sub>1</sub>,c<sub>1</sub>, r<sub>2</sub>),···,
+        (s<sub>H-1</sub>,a<sub>H-1</sub>, c<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.</p>
+
+    <p> the agent optimizes </p>
+    <p>
+        max<sub>θ</sub> <b>E</b><sub>(s<sub>t</sub>, a<sub>t</sub>, τ)<sub>t</sub>∼D(&centerdot;|s<sub>t</sub>, τ)</sub>
+        [log π<sub>θ</sub>(a<sub>t</sub>|s<sub>t</sub>, τ)]</p>
+    <p>thus eliminating the coaching functions.</p>
+
+
+
+    <p>The advantage of advice distillation over <i>behavioral cloning</i> is that the agent accepts a more sparse and
+    abstract type of advice. This allows the agent to generalize better because the advice is invariant to internal
+    distributions shifts of the agent.</p>
+
+    <h3>Evaluation</h3>
+
+    <p>Means simply taking π<sub>θ</sub> and compute the actual ammount of reward the environment provides. </p>
 
 
     <h1>Experimental setup</h1>
@@ -365,6 +459,9 @@
     year={2015},
     url={https://arxiv.org/pdf/1502.04623.pdf}
   }
+
+
+
 
 
 
