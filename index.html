@@ -18,6 +18,9 @@
 
 
 
+
+
+
 </script>
 
 <dt-article>
@@ -274,7 +277,7 @@
         <li>allow the agent to follow the already found <b>high reward</b> policies</li>
     </ol>
 
-    <p> The paper distinguisly introduces the following phases:
+    <p> The paper introduces the following phases:
     <ol>
         <li><b>Grounding</b> - with the focus of making the agent interpret and follow <i>low level, simple</i> <b>advice</b>
         </li>
@@ -284,33 +287,60 @@
                     simple</i> <b>advice</b> to
                     <i>high level, more complex</i> <b>advice</b>
                 </li>
-                <li>from one type of <b>advice</b> to <b>no</b> <b>advice</b> - allowing the agent to figure out policies
+                <li>from one type of <b>advice</b> to <b>no</b> <b>advice</b> - allowing the agent to figure out
+                    policies
                     that allow him to decide independently on next actions
                 </li>
             </ol>
         </li>
         <li><b>Evaluation</b> - which represents the phase in which the agent does not learn anymore and the already
-            learned policy is evaluated</li>
+            learned policy is evaluated
+        </li>
     </ol>
 
     </p>
-    <h4>Grounding</h4>
+    <h3>Grounding</h3>
     <p>The main objective of grounding is to make the agent follow/interpret the provided <b>advice</b>.
         The big advantage vs. plain <b>MDP</b> solving tasks is that the agent can be trained on a <i>very simple</i>
-        environment. The trajectories can be chosen a lot simpler than the ones in a complex environment, where the agent
+        environment. The trajectories can be chosen a lot simpler than the ones in a complex environment, where the
+        agent
         must follow many steps to reach a goal (e.g. a game or a maze).
     </p>
-    <p>Theoretically the advice in the grounding phase can be anything. Chosen wisely it can support the idea of tiered
-    learning. Therefore, <i>the grounding</i> phase is the candidate for the simplest available advice i.e.
+    <p>Theoretically the advice in the grounding phase can be of any nature. However, chosen wisely it can support the
+        idea of tiered
+        learning. Therefore, <i>the grounding</i> phase is the candidate for the simplest available advice i.e.
         <b>Directional Advice</b>
-        At every time step, the agent is rewarded with the dot product between the advised direction and the action it took.
+        At every time step, the agent is rewarded with the dot product between the advised direction and the action it
+        took.
         E.g. Should the agent be advised to move up (i.e. Direction (0, 1)) and he moves in direction (0, 0.5) he will
         be rewarded with <(0, 1) * (0, 0.5)> = 0.5.<br/>
         Should he move in direction (1, -0.5) i.e. diagonally down, he will receive a negative reward of
         <(0, 1) * (1, -0.5)> = - 0.5
     </p>
 
-    <p>By apply</p>
+    <p>By applying the framework of <b>CMDP</b> with the provided <i>low-level</i> advice, then we will obtain the
+        grounded
+        policy</p>
+    <p>π<sub>θ<sub>grounded</sub></sub>(&centerdot;|s<sub>t</sub>, τ, c<sub>low level, t</sub>)</p>
+
+    <p>i.e. a policy that can take the state s, target τ and the <i>low level</i> advice c<sub>t</sub> that provides
+        a probability distribution of next actions.</p>
+
+    <h3>Improvement</h3>
+    <p>The main objective of grounding is to make the agent accept <i>higher level, more complex and more abstract</i>
+        <b>advice</b>. Ideally, we would like the learning process to be sped up by the <i>already grounded</i>
+        <b>θ<sub>grounded</sub></b> policy.</p>
+
+    <p>This can be accomplished two ways:</p>
+    <p>
+    <ol>
+        <li><b>on-policy learning</b> - done the extension we implemented</li>
+        <li><b>off-policy learning</b> - done by spawning a new agent that learns by using
+            the <b>θ<sub>grounded</sub></b> policy
+        </li>
+    </ol>
+    </p>
+
 
     <h1>Experimental setup</h1>
     <p>Text for paragraph 3</p>
@@ -335,6 +365,9 @@
     year={2015},
     url={https://arxiv.org/pdf/1502.04623.pdf}
   }
+
+
+
 
 
 
