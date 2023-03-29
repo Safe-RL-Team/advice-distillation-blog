@@ -30,6 +30,7 @@
 
 
 
+
 </script>
 
 <dt-article>
@@ -49,16 +50,18 @@
     <p><b>
         <dt-cite key="suttonbarto2020">Reinforcement Learning</dt-cite>
     </b>
-        is a machine learning technology in which agents explore their environments, receive reward and
-        learn strategies for maximizing the amount of received reward.
+        is a machine learning technique in which agents explore their environments, receive rewards and
+        learn strategies for maximizing the amount of received reward. Desired behaviour is <i>reinforced</i> through
+        the
+        reward hence the name <i>Reinforcement Learning.</i>
     </p>
 
-    <p>The typical way in which agents learn is trough exploration of the environment and by receiving rewards again by
-        the environment.
+    <p>The typical way in which agents learn is through exploration of the environment and by receiving rewards when
+        executing desired actions or reaching certain states.
         Agents have to <i>"try out"</i> various actions in each state by
         <i>"choosing"</i> from a set of possible
         actions. Normally agents are learning from scratch and without any <i>"guidance"</i>.
-        Thus, they must try out particular combinations <b>(state, action)</b> pairs to
+        Thus, they must try out many <b>(state, action)</b> pairs to
         make sure they have exhaustively found out <i>"enough"</i> information about the environment.
     </p>
 
@@ -69,7 +72,7 @@
         Ideally, we wish to have agents that are able to solve from complex to
         <dt-cite key="dsilver2017">very complex tasks</dt-cite>
         .
-        This implies, to some extent, that the space (state, action) is of very high dimensionality. Combined
+        Usually complex tasks present the challenge of having high dimensionality (state, action) space. Combined
         with the
         random exploration technique, this forces the agent to do a lot of random, unguided exploration. This, in turn,
         leads to
@@ -92,19 +95,21 @@
         in
         <dt-cite key="lynn2019">in natural language</dt-cite>
         .
-        <dt-cite key="morgan2015">Humans communicate</dt-cite>
-        with low effort
+        <dt-cite key="morgan2015">Human communication</dt-cite>
+        is considered
+        low effort and
         <dt-cite key="waxman1995">high bandwidth</dt-cite>
         .
-        In this way, they are being told how to solve tasks,
+        In this way, humans are told how to solve tasks,
         typically by more expert peers (e.g. going to school, university or having a coach).
-        During the learning process, students are receiving constant feedback from their peers on how well they do. Thus
+        During the learning process, students receive constant feedback from their peers on how well they do. Thus
         humans quickly calibrate to make sure that task solving strategies are appropriate.
         The experts also usually use a complex stepwise strategy for teaching. The student usually starts with some very
         basic
         training and gets
         introduced to more complex tasks after he has a pretty good understanding on how to solve easier tasks.
     </p>
+    <p>Moreover, humans typically learn fast and require fewer samples when compared to typical RL techniques.</p>
     <p>Interestingly enough, research suggests that humans themselves are driven by inner rewards.
         One of the main neurotransmitters is
         <dt-cite key="juarez2016">dopamine</dt-cite>
@@ -112,14 +117,13 @@
         <dt-cite key="bayer2005">reward prediction error</dt-cite>
         . Work has been done suggesting dopamine is a very good candidate signal for
         <dt-cite key="schultz1997">driving learning</dt-cite>
-        .
+        . This potentially mirrors the purpose of reward signals in reinforcement learning.
     </p>
-
-    <p>Humans typically learn faster and require fewer samples.</p>
 
     <p>
         <dt-cite key="watkins2023">The paper we investigated</dt-cite>
-        suggests solving issue of high number of samples by enabling agents to follow a similar learning
+        suggests a strategy to reduce the number of samples agents require
+        by enabling agents to follow a similar stepwise learning
         strategy.
         More concretely, agents are made
         <dt-cite key="arumugam2019">teachable</dt-cite>
@@ -127,34 +131,40 @@
         from humans.
         The teachers are giving instructions to the agent on how to solve intermediary steps of a task and are not
         allowed to directly
-        control the agent's movements. The paper calls these instructions <b>advice</b></p>
+        control the agent's movements. The paper calls these instructions <b>advice</b>.
+    </p>
 
     <p>Similarly to the stepwise school curriculum of humans, the agents are trained on various levels of complexity of
         the <b>advice</b>.
-        The paper suggests 3 steps of learning:
+        The paper suggests 4 steps of learning:
     <ol>
         <li><b>Grounding</b> - teaching the agent how to follow, simple, <i>low level <b>advice</b></i></li>
         <li><b>Grounding to multiple types of advice</b> - teaching the agent how to follow, tuples of simple, <i>low
             level <b>advice</b></i></li>
         <li><b>Improvement to higher level advice</b> - teaching the grounded agent to follow more complex, <i>higher
             level <b>advice</b></i></li>
-        <li><b>Improvement to advice independence</b> - removing the teacher completely and allow the agent to interact
+        <li><b>Improvement to advice independence</b> - removing the teacher completely and allowing the agent to
+            interact
             with its environment independently
         </li>
     </ol>
     </p>
 
-    <p>After learning, goes through a typical <b>evaluation</b> phase to test its performance.</p>
+    <p>After learning, the agent goes through a typical <b>evaluation</b> phase to test its performance.</p>
 
     <p>The paper makes the claim that it <i>["proposes a framework for training automated agents using similarly
         rich interactive supervision"]</i> that we do not regard as being true. The advice implemented in the codebase
-        not
-        rich at all,
-        see @Method. We will discuss in the before last paragraph a suggestion on how to extend this to a more rich
+        is not
+        rich at all, coming mostly in the shape of 2-D vector. This is described in more detail in the <i>Experimental
+            Setup</i>
+        section. We will suggest in the <i>Results and Discussion</i> section a possible method to extend this to a more
+        rich
         language.
     </p>
 
-    <p>This is achieved via augmenting the reward signal typical in RL setting. The teacher has the ability to present a
+    <p>Tiered learning, also called <b>distillation</b> and formally defined later, is achieved via augmenting the
+        reward
+        signal typical in an RL setting. The teacher has the ability to present a
         reward to the agent depending on how well it is following the given advice. Thus, the teacher acts as a
         <dt-cite key="macglashan2017">coach</dt-cite>
         and the
@@ -175,12 +185,11 @@
         We will then present our contribution to how we made the algorithm make use of
         <d-cite key="suttonbarto2020"><b>On policy Learning</b></d-cite>
         .
-        We will present some preliminary results, talk about the challenges we faced and then open up a discussions
-        section.
+        We will present some preliminary results, talk about the challenges we faced and then discuss our findings.
     </p>
     .
 
-    <p>Other attempts have been at enabling agents to learn <i>more like</i>humans do. This includes:
+    <p>Other attempts have been made at enabling agents to learn <i>more like</i> humans do. These include:
     <ul>
 
         <li>
@@ -210,31 +219,33 @@
         {S, A, T, R, ρ, γ, p} where
     <ol>
         <li>S is the <i>state space</i> and represents valid positions where the agent could be found at any time</li>
-        <li>A(s) is the <i>action space</i> and represents the valid actions that an agent can take being in a
+        <li>A(s) is the <i>action space</i> and represents the valid actions that an agent can take while in a
             particular state
         </li>
         <li>T(s<sub>t</sub>, a, s<sub>t+1</sub>) is the <i>transition dynamic</i> and represents the probability of
             arriving at
-            s<sub>t+1</sub> if at time t the agent was at s<sub>t</sub> and executing action a
+            <b>s<sub>t+1</sub></b> if at time t the agent was at <b>s<sub>t</sub></b> and executing action <b>a</b>
         </li>
-        <li>R(s, a) is the <i>reward</i> that an agent receives being and state s and executing action a</li>
-        <li>ρ(s<sub>0</sub>) is the <i>initial state distribution</i>representing where the agent starts each episode
+        <li>R(s, a) is the <i>reward</i> that an agent receives while in state <b>s</b> and executing action <b>a</b>
+        </li>
+        <li>ρ(s<sub>0</sub>) is the <i>initial state distribution</i> representing where the agent starts each episode
         </li>
         <li>γ is the <i>discount factor</i> balancing how important future rewards vs immediate ones are</li>
         <li>p(τ) is the <i>distribution over tasks</i> i.e. what kind of task the agent is supposed to solve</li>
     </ol>
     </p>
 
-    <p>The agent decides on an action to take at each time step <i>t</i>. A set of decisions the agent takes is called a
+    <p>The agent decides on an action to take at each time step <b><i>t</i></b>. A set of decisions the agent takes is
+        called a
         <b>policy</b> and is typically denoted by <b>π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ)</b>. The policy is
         called
         <b>θ</b> and is usually implemented by a probability distribution on the set <b>A</b>.
 
         The agent thus interacts with the environment and collects <b>trajectories</b> of the shape</p>
-    <dt-code block>
+    <p>
         D = {(s<sub>0</sub>,a<sub>0</sub>,r<sub>1</sub>),(s<sub>1</sub>,a<sub>1</sub>,r<sub>2</sub>),···
         ,(s<sub>H-1</sub>,a<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.
-    </dt-code>
+    </p>
 
 
     <h3>Solving the <b>MDP</b></h3>
@@ -248,7 +259,7 @@
     </p>
 
     <p>
-        where <b>E(</b>X<b>)</b>=&lt;X&gt; represents the expected value the random variable X.
+        where <b>E(</b>X<b>)</b>=&lt;X&gt; represents the expected value of the random variable X.
     </p>
 
     <h3>Exploration/exploitation dilemma</h3>
@@ -256,14 +267,13 @@
     <p>Typically agents need to execute random actions to discover trajectories which prove to be of high reward. In
         case such
         are found, the agent increases the probability of taking similar actions in the future. Because of high
-        dimensional <b>state x action</b> space,
+        dimensional <b>(state, action)</b> space,
         the agent typically needs to try out a lot of combinations to make sure it found the best one. The agent always
         needs a balance
-        between trying out random new actions and commit to already known high reward ones. It is still an unsolved
+        between trying out random new actions and commiting to already known high reward ones. It is still an unsolved
         problem
         to find this optimal balance. This is called the <b>exploration/exploitation dilemma</b> agents typically face
-        and quickly explains the need for many samples (#introduction).
-    </p>
+        and quickly explains the need for many samples. This was described in the <i>Introduction</i> section</p>
 
 
     <h2>Coaching-Augmented Markov Decision Processes</h2>
@@ -271,37 +281,42 @@
     <p>The paper extends the classical <b>MDP</b> by providing two extensions:
     <ol>
         <li>C = {c<sub>t</sub>}, the set of <i>coaching functions</i>
-            where c<sub>t</sub> represents advice given to the agent at time <i>t</i>.
+            where <b>c<sub>t</sub></b> represents advice given to the agent at time <b><i>t</i></b>.
         </li>
-        <li>R<sub>CMDP</sub>=R(s,a) + R<sub>coach</sub>(s,a), where R(s,a) is the previous reward presented by the
+        <li>R<sub>CMDP</sub>=R(s,a) + R<sub>coach</sub>(s,a), where <b>R(s,a)</b> is the previous reward presented by
+            the
             environment and
-            R<sub>coach</sub>(s,a) represents the added reward the coach provides if the agent follows his advice
+            <b>R<sub>coach</sub>(s,a)</b> represents the additional reward the coach provides if the agent follows his
+            advice.
         </li>
     </ol>
     </p>
 
-    <p><br/>c<sub>j</sub> used in the paper is either:
+    <p><br/><b>c<sub>j</sub></b> used in the paper is either:
     <ol>
-        <li>Cardinal Advice <i>(Up (0,1), Down(0, -1), Est(-1, 0) or West(1, 0)</i></li>
-        <li>Directional Advice <i>(0.5, 0.5)</i></li>
+        <li>Cardinal Advice <i>(North (0,1), South (0, -1), East(-1, 0) or West(1, 0)</i></li>
+        <li>Directional Advice <i>(e.g. Direction (0.5, 0.5))</i></li>
         <li>Waypoint Advice <i>(e.g. Go To (3,1))</i></li>
+        <li>Offset Waypoint Advice where a waypoint <i>(e.g. Go To (3,1))</i> is considered relative to the agent's
+            position
+        </li>
     </ol>
     </p>
 
-    <p>but could be extended to include natural language richer type of advice (see #discussions)</p>
+    <p>but could be extended to include natural language or other richer types of advice (see the <i>Conclusions</i>
+        section).</p>
 
     <p>
 
-        Like this, we formally define the <b>Coaching Augmented MDP (CAMP)</b> = {S, A, T, R<sub>CMDP</sub>, ρ, γ, p,
+        Thus, we formally define the <b>Coaching Augmented MDP (CAMDP)</b> = {S, A, T, R<sub>CAMDP</sub>, ρ, γ, p,
         C}.
 
         The agent then captures trajectories of the shape:
     </p>
-    <dt-code block>
-        <p>D = {(s<sub>0</sub>,a<sub>0</sub>,c<sub>0</sub>
-            ,r<sub>1</sub>),(s<sub>1</sub>,a<sub>1</sub>,c<sub>1</sub>,r<sub>2</sub>),···
-            ,(s<sub>H-1</sub>,a<sub>H-1</sub>, c<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.</p>
-    </dt-code>
+
+    <p>D = {(s<sub>0</sub>,a<sub>0</sub>,c<sub>0</sub>
+        ,r<sub>1</sub>),(s<sub>1</sub>,a<sub>1</sub>,c<sub>1</sub>,r<sub>2</sub>),···
+        ,(s<sub>H-1</sub>,a<sub>H-1</sub>, c<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.</p>
 
     <p>
         The new optimization problem is to find the <i>best</i> policy <b>θ</b> that maximizes rewards from <b>both</b>
@@ -312,34 +327,33 @@
         c<sub>t</sub>)</sub>(∑<sup>∞</sup><sub>t=0</sub> γ<sup>t</sup>r(s<sub>t</sub>, a<sub>t</sub>, c<sub>t</sub>,
         τ)>)]</p>
 
-    <p>representing an agent that interacts with the environment and has access to advice presented under the form of
-        the coaching function c<sub>t</sub>.
+    <p>representing an agent that interacts with the environment and has access to advice presented in the form of
+        coaching functions <b>c<sub>t</sub></b>.
     </p>
 
-    <p>The big advantage of <b>CMDP</b> to plain <b>MDP</b> is that it formalizes the interaction of the agent with
+    <p>The big advantage of <b>CAMDP</b> over plain <b>MDP</b> is that it formalizes the interaction of the agent with
         a <i>human in the loop trainer</i>. The agent learns that <i>following human instructions/advice provides
             reward</i> and it starts doing so, enabling the agent to take advantage of <i>expert knowledge</i>.
     </p>
 
     <h1>Method</h1>
     <p>Our target is to quickly train agents that are able to solve complex tasks.
-        Considering the #Exploration/exploitation dilemma, we would want agents that quickly find high reward
+        Considering the <i>Exploration/exploitation dilemma</i>, we would want agents that quickly find high reward
         policies eliminating a lot of random exploration.</p>
     <p>The paper suggests a tier based teaching scheme, speeding up learning
         versus typical <b>MDP</b>.
-    </p>.
-
+    </p>
     <p>
         This is done by:
     <ol>
         <li>making the agent follow the coaching it receives</li>
         <li>introducing increasingly complex coaching</li>
         <li>guiding the agent to the goal</li>
-        <li>allowing him to quickly understand that specific <i>policies</i>provide <b> high reward</b></li>
+        <li>allowing him to quickly understand that specific <i>policies</i> provide <b> high reward</b></li>
         <li>eliminate the coaching</li>
         <li>allow the agent to follow the already found <b>high reward</b> policies</li>
     </ol>
-
+    <br/>
     <p> The paper introduces the following phases:
     <ol>
         <li><b>Grounding</b> - with the focus of making the agent interpret and follow <i>low level, simple</i> <b>advice</b>
@@ -365,14 +379,14 @@
     <h3>Grounding</h3>
     <p>The main objective of grounding is to make the agent follow/interpret the provided <b>advice</b>.
         The big advantage vs. plain <b>MDP</b> solving tasks is that the agent can be trained on a <i>very simple</i>
-        environment. The trajectories can be chosen a lot simpler than the ones in a complex environment, where the
+        environment. The trajectories can be a lot simpler/shorter than the ones in a complex environment, where the
         agent
         must follow many steps to reach a goal (e.g. a game or a maze).
     </p>
     <p>Theoretically the advice in the grounding phase can be of any nature. However, chosen wisely it can support the
         idea of tiered
         learning. Therefore, <i>the grounding</i> phase is the candidate for the simplest available advice i.e.
-        <b>Directional Advice</b>
+        <b>Directional Advice</b>.
         At every time step, the agent is rewarded with the dot product between the advised direction and the action it
         took.
         E.g. Should the agent be advised to move up (i.e. Direction (0, 1)) and he moves in direction (0, 0.5) he will
@@ -381,21 +395,19 @@
         <(0, 1) * (1, -0.5)> = - 0.5
     </p>
 
-    <p>By applying the framework of <b>CMDP</b> with the provided <i>low-level</i> advice, then we will obtain the
+    <p>By applying the framework of <b>CAMDP</b> with the provided <i>low-level</i> advice, then we will obtain the
         grounded
         policy</p>
-    <p>π<sub>θ<sub>grounded</sub></sub>(&centerdot;|s<sub>t</sub>, τ, c<sub>low level, t</sub>)</p>
+    <p><b>π<sub>θ<sub>grounded</sub></sub>(&centerdot;|s<sub>t</sub>, τ, c<sub>low level, t</sub>)</b></p>
 
-    <p>i.e. a policy that can take the state s, target τ and the <i>low level</i> advice c<sub>t</sub> that provides
+    <p>i.e. a policy that can take the state <b>s,</b> target <b>τ</b> and the <i>low level</i> advice <b>c<sub>t</sub></b> and provides
         a probability distribution of next actions.</p>
 
-    TODO: talk on how advice is actually inputted in the actor mlp
-
     <h3><b>Distillation</b> to other types of advice</h3>
-    <p>Once we have a policy able to interpret the simplest type of advice, we can use it to quicker teach the agent
+    <p>Once we have a policy able to interpret the simplest type of advice, we can use it to more quickly teach the agent
         other types of advice.
     </p>
-    <p>The process of using a type of advice to quicker learn another one is called <b>distillation</b> and represents
+    <p>The process of using <b>one type</b> of advice to more quickly learn <b>another one</b> is called <b>distillation</b> and represents
         the key innovation of this paper.</p>
 
     <p>Formally, the agent gathers trajectories of the shape:</p>
@@ -406,61 +418,59 @@
     </p>
 
     <p>
-        c<sup>l</sup><sub>t</sub> represents the <b>low level</b><i> advice</i> while c<sup>h</sup><sub>t</sub>
+        <b>c<sup>l</sup><sub>t</sub></b> represents the <b>low level</b><i> advice</i> while <b>c<sup>h</sup><sub>t</sub></b>
         represents the
         <b>high level, more complex</b> type of <i>advice</i>.
     </p>
 
     <p><b>Distillation</b> can be achieved using two types of learning:
     <ol>
-        <li>using <i>off-policy actor critic</i> learning - done mostly codebase accompanying the paper</li>
-        <li>using <i>on-policy actor critic</i>learning combined with supervised learning of the mapping from
-            <i>low level <b>to</b> high level advice</i> learning - done in the code extension we implemented
+        <li>using <i>off-policy actor critic</i> learning - the codebase mainly implements this method</li>
+        <li>using <i>on-policy actor critic</i> learning combined with supervised learning of the mapping from
+            <i>low level <b>to</b> high level advice</i> - done in the code extension we implemented
         </li>
     </ol>
     </p>
-    <p>In the first method, the new to learned policy π<sub>Φ<sub>new</sub></sub> is a newly initialized policy. The
+    <p>In the first method, the new policy to be learned <b>π<sub>Φ<sub>new</sub></sub></b> is a newly initialized policy. The
         agent
-        explores the environment using <b>Φ<sub>new</sub></b> but learns by using the off-policy <b>θ<sub>grounded</sub></b>.
-        This approach comes with the fact that the exploration/exploitation dilemma basically is <b>reset</b>. The agent
-        is forced
-        to execute enough random exploration. By having enough trajectories, such that the off-policy offloading
-        carries over the grounded knowledge base.
+        explores the environment using <b>Φ<sub>new</sub></b> but learns off-policy by using <b>θ<sub>grounded</sub></b>.
+        This approach comes with the fact that the exploration/exploitation dilemma is basically <b>reset</b>. The agent
+        is forced to start by
+        randomly exploring again. Having enough trajectories, <b>θ<sub>grounded</sub></b> off loads the grounded knowledge base.
+        Thus the new policy takes advantage of the grounded phase.
     </p>
-    <p>We tried to tackle this issue in our implementation. We reused the already existing
+    <p>We tried to tackle the issue of restarting with random exploration in our implementation. We reuse the already existing
         <b>θ<sub>grounded</sub></b> by learning a mapper from the <i>new</i> type of advice to the <i>old one</i>.
         Like this, the old policy continues to work because of no change in the structure of parameters.</p>
     <p>
-        The mapping from c<sup>h</sup><sub>t</sub> to c<sup>l</sup><sub>t</sub> we learned via supervised learning.
-        Our reasoning was that we can take advantage of the existing pairs (c<sup>h</sup><sub>t</sub>,
-        c<sup>l</sup><sub>t</sub>)
+        The mapping from <b>c<sup>h</sup><sub>t</sub></b> to <b>c<sup>l</sup><sub>t</sub></b> was learned via supervised learning.
+        Our reasoning was that we can take advantage of the existing pairs <b>(c<sup>h</sup><sub>t</sub>,
+        c<sup>l</sup><sub>t</sub>)</b>
         that can be learned in a supervised way.</p>
-    <p>The expectation was then that <b>θ<sub>grounded, high level -> low level</sub></b> would start from a higher
+    <p>Our expectation was then that <b>θ<sub>grounded, high level -> low level</sub></b> would start from a higher
         baseline than
         <b>Φ<sub>new</sub></b>. This should be measurable in experiments.
     </p>
 
-    <p>The target of grounding is thus achieved by having a well grounded policy. This can accept multiple types of
-        advice. </p>
-    <p>π<sub>Φ</sub>(&centerdot;|s<sub>t</sub>, τ, <b><u>c<sub>t</sub></u></b>)</p>
-    <p> where <b><u>c<sub>t</sub></u></b> represents the tuple
-        (c<sup>l</sup><sub>t</sub>, c<sup>h<sub>1</sub></sup><sub>t</sub>, c<sup>h<sub>2</sub></sup><sub>t</sub>, ...).
-    </p>
+    <p>After this step we have reached our goal of <b>grounding</b> i.e. having </p>
+    <p><b>π<sub>Φ</sub>(&centerdot;|s<sub>t</sub>, τ, <b><u>c<sub>t</sub></u></b>)</b></p>
+    <p>a policy that can accept a tuple of advice of the shape  <b>(c<sup>l</sup><sub>t</sub>, c<sup>h<sub>1</sub></sup><sub>t</sub>, c<sup>h<sub>2</sub></sup><sub>t</sub>, ...)</b>.</p>
+
 
     <h3>Improvement</h3>
     <p>The ultimate goal is to obtain a policy</p>
-    <p>π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ)</p>
+    <p><b>π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ)</b></p>
     <p>which does not require the coaching functions. The paper uses the already explained <b>distillation</b> technique
         to learn such a policy.</p>.
     <p>
         Distillation can be done either:
     <ol>
-        <li>by distilling from the grounded policy to another intermediary policy that accepts even more complex,
+    <li>by distilling from the <b>grounded policy</b> to <b>another intermediary policy</b> that accepts even more complex,
             abstract,
             and sparse type of advice
         </li>
         <p>OR</p>
-        <li>by distilling to no advice, taking advantage of the already existing policies.</li>
+    <li>by distilling to <b>no advice</b>, achieving advice independence by taking advantage of already known high reward trajectories.</li>
     </ol>
     </p>
 
@@ -476,13 +486,13 @@
     <p>thus eliminating the coaching functions.</p>
 
 
-    <p>The advantage of advice distillation over <i>behavioral cloning</i> is that the agent accepts a more sparse and
-        abstract type of advice. This allows the agent to generalize better because the advice is invariant to internal
+    <p>The advantage of advice distillation over <i>imitation learning</i> is that the agent accepts a more <b>sparse and
+        abstract</b> type of advice. This allows the agent to generalize better because the advice is invariant to internal
         distributions shifts of the agent.</p>
 
     <h3>Evaluation</h3>
 
-    <p>During evaluation let the agent explore using π<sub>θ</sub> and compute the actual amount of reward the
+    <p>During evaluation let the agent explore using <b>π<sub>θ</sub></b> and compute the actual amount of reward the
         environment provides. </p>
 
 
@@ -687,6 +697,7 @@ http://www.incompleteideas.net/book/RLbook2020.pdf
     year={},
     url={}
   }
+
 
 
 
