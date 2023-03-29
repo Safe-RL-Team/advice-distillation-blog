@@ -28,6 +28,8 @@
 
 
 
+
+
 </script>
 
 <dt-article>
@@ -51,7 +53,8 @@
         learn strategies for maximizing the amount of received reward.
     </p>
 
-    <p>The typical way in which agents learn is trough exploration of the environment and by receiving rewards again by the environment.
+    <p>The typical way in which agents learn is trough exploration of the environment and by receiving rewards again by
+        the environment.
         Agents have to <i>"try out"</i> various actions in each state by
         <i>"choosing"</i> from a set of possible
         actions. Normally agents are learning from scratch and without any <i>"guidance"</i>.
@@ -88,12 +91,17 @@
         <dt-cite key="chopra2019">communication</dt-cite>
         in
         <dt-cite key="lynn2019">in natural language</dt-cite>
-        . <dt-cite key="morgan2015">Humans communicate</dt-cite> with low effort <dt-cite key="waxman1995">high bandwidth</dt-cite>.
+        .
+        <dt-cite key="morgan2015">Humans communicate</dt-cite>
+        with low effort
+        <dt-cite key="waxman1995">high bandwidth</dt-cite>
+        .
         In this way, they are being told how to solve tasks,
         typically by more expert peers (e.g. going to school, university or having a coach).
         During the learning process, students are receiving constant feedback from their peers on how well they do. Thus
         humans quickly calibrate to make sure that task solving strategies are appropriate.
-        The experts also usually use a complex stepwise strategy for teaching. The student usually starts with some very basic
+        The experts also usually use a complex stepwise strategy for teaching. The student usually starts with some very
+        basic
         training and gets
         introduced to more complex tasks after he has a pretty good understanding on how to solve easier tasks.
     </p>
@@ -109,9 +117,13 @@
 
     <p>Humans typically learn faster and require fewer samples.</p>
 
-    <p><dt-cite key="watkins2023">The paper we investigated</dt-cite> suggests solving issue of high number of samples by enabling agents to follow a similar learning
+    <p>
+        <dt-cite key="watkins2023">The paper we investigated</dt-cite>
+        suggests solving issue of high number of samples by enabling agents to follow a similar learning
         strategy.
-        More concretely, agents are made <dt-cite key="arumugam2019">teachable</dt-cite> i.e. learn how to follow instructions
+        More concretely, agents are made
+        <dt-cite key="arumugam2019">teachable</dt-cite>
+        i.e. learn how to follow instructions
         from humans.
         The teachers are giving instructions to the agent on how to solve intermediary steps of a task and are not
         allowed to directly
@@ -122,7 +134,8 @@
         The paper suggests 3 steps of learning:
     <ol>
         <li><b>Grounding</b> - teaching the agent how to follow, simple, <i>low level <b>advice</b></i></li>
-        <li><b>Grounding to multiple types of advice</b> - teaching the agent how to follow, tuples of simple, <i>low level <b>advice</b></i></li>
+        <li><b>Grounding to multiple types of advice</b> - teaching the agent how to follow, tuples of simple, <i>low
+            level <b>advice</b></i></li>
         <li><b>Improvement to higher level advice</b> - teaching the grounded agent to follow more complex, <i>higher
             level <b>advice</b></i></li>
         <li><b>Improvement to advice independence</b> - removing the teacher completely and allow the agent to interact
@@ -134,16 +147,20 @@
     <p>After learning, goes through a typical <b>evaluation</b> phase to test its performance.</p>
 
     <p>The paper makes the claim that it <i>["proposes a framework for training automated agents using similarly
-        rich interactive supervision"]</i> that we do not regard as being true. The advice implemented in the codebase not
+        rich interactive supervision"]</i> that we do not regard as being true. The advice implemented in the codebase
+        not
         rich at all,
         see @Method. We will discuss in the before last paragraph a suggestion on how to extend this to a more rich
         language.
     </p>
-    TODO Talk about requiring less samples and also requiring less complex environments for learning.
 
     <p>This is achieved via augmenting the reward signal typical in RL setting. The teacher has the ability to present a
         reward to the agent depending on how well it is following the given advice. Thus, the teacher acts as a
-        <dt-cite key="macglashan2017">coach</dt-cite> and the <dt-cite key="arumugam2019">agent learns how to react to human feedback</dt-cite>.</p>
+        <dt-cite key="macglashan2017">coach</dt-cite>
+        and the
+        <dt-cite key="arumugam2019">agent learns how to react to human feedback</dt-cite>
+        .
+    </p>
 
     <p>To understand how this works, we will
         present the <b>Coaching-Augmented Markov Decision Process</b> formalism in the next section.
@@ -160,20 +177,31 @@
         .
         We will present some preliminary results, talk about the challenges we faced and then open up a discussions
         section.
-    </p>.
+    </p>
+    .
 
     <p>Other attempts have been at enabling agents to learn <i>more like</i>humans do. This includes:
-        <ul>
+    <ul>
 
-    <li><dt-cite key="morgan2015">imitation learning</dt-cite> i.e. <dt-cite key="ziebart2008">closely mimicking demonstrated behaviour</dt-cite></li>
-            <li>No Regret Learning: <dt-cite key="">DAgger</dt-cite></li>
-            <li><dt-cite key="christiano2023">Preference Learning</dt-cite></li>
-        </ul>
+        <li>
+            <dt-cite key="morgan2015">imitation learning</dt-cite>
+            i.e.
+            <dt-cite key="ziebart2008">closely mimicking demonstrated behaviour</dt-cite>
+        </li>
+        <li>No Regret Learning:
+            <dt-cite key="">DAgger</dt-cite>
+        </li>
+        <li>
+            <dt-cite key="christiano2023">Preference Learning</dt-cite>
+        </li>
+    </ul>
     </p>
 
     <p>The big disadvantage of these techniques, though, is the low bandwidth of communication.
-        This means that little <dt-cite key="knox2008">information</dt-cite>
-    is extracted from each interaction with humans.</p>
+        This means that little
+        <dt-cite key="knox2008">information</dt-cite>
+        is extracted from each interaction with humans.
+    </p>
 
 
     <h1>Background</h1>
@@ -290,10 +318,7 @@
 
     <p>The big advantage of <b>CMDP</b> to plain <b>MDP</b> is that it formalizes the interaction of the agent with
         a <i>human in the loop trainer</i>. The agent learns that <i>following human instructions/advice provides
-            reward</i> and
-        it starts doing so.
-        The agent can now take advantage of <i>expert knowledge</i>.
-        TODO: this could be improved
+            reward</i> and it starts doing so, enabling the agent to take advantage of <i>expert knowledge</i>.
     </p>
 
     <h1>Method</h1>
@@ -662,6 +687,8 @@ http://www.incompleteideas.net/book/RLbook2020.pdf
     year={},
     url={}
   }
+
+
 
 
 
