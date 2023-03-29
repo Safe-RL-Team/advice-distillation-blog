@@ -48,15 +48,15 @@
         <dt-cite key="suttonbarto2020">Reinforcement Learning</dt-cite>
     </b>
         is a machine learning technology in which agents explore their environments, receive reward and
-        learn strategies for maximizing the amount of reward they receive.
+        learn strategies for maximizing the amount of received reward.
     </p>
 
-    <p>The typical way in which agents learn is trough exploration of the environment and by receiving rewards.
-        Agents have to <i>"try out"</i> various actions in each state. In each particular state, the agent
-        <i>"chooses"</i> from a set of possible
-        action. Normally agents are learning from scratch and without any <i>"guidance"</i>.
+    <p>The typical way in which agents learn is trough exploration of the environment and by receiving rewards again by the environment.
+        Agents have to <i>"try out"</i> various actions in each state by
+        <i>"choosing"</i> from a set of possible
+        actions. Normally agents are learning from scratch and without any <i>"guidance"</i>.
         Thus, they must try out particular combinations <b>(state, action)</b> pairs to
-        make sure it has <i>"found enough"</i> information about the environment.
+        make sure they have exhaustively found out <i>"enough"</i> information about the environment.
     </p>
 
     <p>RL has been employed successfully in solving some tasks with performance better than humans have been able to do.
@@ -66,7 +66,7 @@
         Ideally, we wish to have agents that are able to solve from complex to
         <dt-cite key="dsilver2017">very complex tasks</dt-cite>
         .
-        This implies, to some extent, that the space (state, action) is one with a very high dimensionality. Combined
+        This implies, to some extent, that the space (state, action) is of very high dimensionality. Combined
         with the
         random exploration technique, this forces the agent to do a lot of random, unguided exploration. This, in turn,
         leads to
@@ -74,13 +74,13 @@
         issue of requiring
         <dt-cite key="barto90">high number of samples</dt-cite>
         . For example, in obtaining at least 20% of human performance in <i>Atari Games</i>
-        the algorithms required at e least
+        the algorithms required at least
         <dt-cite key="hessel2017">10 million samples</dt-cite>
         .
     </p>
 
     <p>This is in stark contrast to how humans learn, though. Humans start as children
-        <dt-cite key="lyons2007">imitating</dt-cite>
+        <dt-cite key="lyoms2007">imitating</dt-cite>
         what other humans do.
         They then continue imitation by learning
         <dt-cite key="korteling2021">indirectly</dt-cite>
@@ -88,13 +88,12 @@
         <dt-cite key="chopra2019">communication</dt-cite>
         in
         <dt-cite key="lynn2019">in natural language</dt-cite>
-        .
+        . <dt-cite key="morgan2015">Humans communicate</dt-cite> with low effort <dt-cite key="waxman1995">high bandwidth</dt-cite>.
         In this way, they are being told how to solve tasks,
         typically by more expert peers (e.g. going to school, university or having a coach).
-        During the learning process, students are receiving constant feedback from their peers to make sure their
-        strategies for
-        solving tasks at hand are appropriate.
-        The experts also usually use a complex stepwise strategy for teaching. The student starts with some very basic
+        During the learning process, students are receiving constant feedback from their peers on how well they do. Thus
+        humans quickly calibrate to make sure that task solving strategies are appropriate.
+        The experts also usually use a complex stepwise strategy for teaching. The student usually starts with some very basic
         training and gets
         introduced to more complex tasks after he has a pretty good understanding on how to solve easier tasks.
     </p>
@@ -103,26 +102,27 @@
         <dt-cite key="juarez2016">dopamine</dt-cite>
         . Its purpose is to encode
         <dt-cite key="bayer2005">reward prediction error</dt-cite>
-        . Work has been done suggesting dopamine as
-        <dt-cite key="schultz1997">a signal driving learning</dt-cite>
+        . Work has been done suggesting dopamine is a very good candidate signal for
+        <dt-cite key="schultz1997">driving learning</dt-cite>
         .
     </p>
 
     <p>Humans typically learn faster and require fewer samples.</p>
 
-    <p>The paper suggests solving issue of high number of samples by enabling agents to follow a similar learning
+    <p><dt-cite key="watkins2023">The paper we investigated</dt-cite> suggests solving issue of high number of samples by enabling agents to follow a similar learning
         strategy.
-        More concretely, agents are made teachable. They learn how to accept instructions from humans that act as their
-        teachers.
+        More concretely, agents are made <dt-cite key="arumugam2019">teachable</dt-cite> i.e. learn how to follow instructions
+        from humans.
         The teachers are giving instructions to the agent on how to solve intermediary steps of a task and are not
         allowed to directly
         control the agent's movements. The paper calls these instructions <b>advice</b></p>
 
     <p>Similarly to the stepwise school curriculum of humans, the agents are trained on various levels of complexity of
-        this <b>advice</b>.
+        the <b>advice</b>.
         The paper suggests 3 steps of learning:
     <ol>
         <li><b>Grounding</b> - teaching the agent how to follow, simple, <i>low level <b>advice</b></i></li>
+        <li><b>Grounding to multiple types of advice</b> - teaching the agent how to follow, tuples of simple, <i>low level <b>advice</b></i></li>
         <li><b>Improvement to higher level advice</b> - teaching the grounded agent to follow more complex, <i>higher
             level <b>advice</b></i></li>
         <li><b>Improvement to advice independence</b> - removing the teacher completely and allow the agent to interact
@@ -133,8 +133,8 @@
 
     <p>After learning, goes through a typical <b>evaluation</b> phase to test its performance.</p>
 
-    <p>The paper makes the claim that it [proposes a framework for training automated agents using similarly
-        rich interactive supervision] that we do not regard as being true. The advice implemented in the codebase not
+    <p>The paper makes the claim that it <i>["proposes a framework for training automated agents using similarly
+        rich interactive supervision"]</i> that we do not regard as being true. The advice implemented in the codebase not
         rich at all,
         see @Method. We will discuss in the before last paragraph a suggestion on how to extend this to a more rich
         language.
@@ -145,11 +145,7 @@
         reward to the agent depending on how well it is following the given advice. Thus, the teacher acts as a
         <dt-cite key="macglashan2017">coach</dt-cite> and the <dt-cite key="arumugam2019">agent learns how to react to human feedback</dt-cite>.</p>
 
-    <li><dt-cite key="arumugam2019">making agents react to human feedback</dt-cite></li>
-
-    <p></p>
-
-    <p>To understand how this work, we will
+    <p>To understand how this works, we will
         present the <b>Coaching-Augmented Markov Decision Process</b> formalism in the next section.
 
         We will then
@@ -169,38 +165,15 @@
     <p>Other attempts have been at enabling agents to learn <i>more like</i>humans do. This includes:
         <ul>
 
-            <li><dt-cite key=""></dt-cite></li>
-            <li><dt-cite key=""></dt-cite></li>
-            <li><dt-cite key=""></dt-cite></li>
+    <li><dt-cite key="morgan2015">imitation learning</dt-cite> i.e. <dt-cite key="ziebart2008">closely mimicking demonstrated behaviour</dt-cite></li>
+            <li>No Regret Learning: <dt-cite key="">DAgger</dt-cite></li>
+            <li><dt-cite key="christiano2023">Preference Learning</dt-cite></li>
         </ul>
     </p>
 
-    TODO: Paper suggests tackling this issues by making the agent teachable. This means, make possible for humans to
-    interact in
-    an indirect way with the agent, by providing instructions that the agent should be able to learn.
-
-    <p nolongerrelevant>The original paper we investigated
-        <dt-cite key="teachablerrl!?"/>
-        suggests using human interaction in a similar way
-        that humans are coached. A <b>teacher</b> could be used to provide instructions called <b>advice</b> to the
-        agent.
-
-        Idea:
-        1. agent becomes low level advice which has 2 purposes.
-        1. Makes the agent follow the teacher's instruction
-        2. However, this is done in a reduced environment, reducing the number of samples that the agent requires for
-        learning
-        2. After the agent can follow this low level advice, higher level of advice is provided, increasing the
-        complexity of
-        1. Instructions the agent can follow
-        2. problems the agent can solve
-
-    </p>
-    <p nolongerrelevant>
-        This general approach with the advantage that the agent can take advantage of already existing knowledge
-        hopefully speeding up the learning process.
-    </p>
-    <p nolongerrelevant>Having a <b>human in the loop</b>raises the issue of cost TODO: improve. </p>
+    <p>The big disadvantage of these techniques, though, is the low bandwidth of communication.
+        This means that little <dt-cite key="knox2008">information</dt-cite>
+    is extracted from each interaction with humans.</p>
 
 
     <h1>Background</h1>
@@ -505,6 +478,13 @@
 http://www.incompleteideas.net/book/RLbook2020.pdf
 
 <script type="text/bibliography">
+  @article{watkins2023,
+    title={Teachable Reinforcement Learning via Advice Distillation},
+    author={Olivia Watkins, Trevor Darrell, Pieter Abbeel, Jacob Andreas, Abhishek Gupta},
+    journal={arXivreprint 	arXiv:2203.11197},
+    year={2023},
+    url={https://arxiv.org/pdf/2203.11197.pdf}
+  }
 @book{suttonbarto2020,
     title={Reinforcement Learning},
     author={Richard S. Sutton, Anrew G. Barto},
@@ -615,9 +595,72 @@ http://www.incompleteideas.net/book/RLbook2020.pdf
   @article{macglashan2017,
     title={Interactive Learning from Policy-Dependent Human Feedback},
     author={James MacGlashan, Mark K Ho, Robert Loftin, Bei Peng, Guan Wang, David Roberts, Matthew E. Taylor, Michael L. Littman},
-    journal={arXivreprint 	arXiv:1701.06049},
+    journal={arXivreprint arXiv:1701.06049},
     year={2017},
     url={https://arxiv.org/pdf/1701.06049.pdf}
+  }
+  @article{morgan2015,
+    title={Experimental evidence for the co-evolution of hominin tool-making teaching and language},
+    author={T. J. H. Morgan, N. T. Uomini, L. E. Rendell, L. Chouinard-Thuly, S. E. Street, H. M. Lewis, C. P. Cross, C. Evans, R. Kearney, I. de la Torre, A. Whiten & K. N. Laland},
+    journal={Nat Commun 6, 6029},
+    year={2015},
+    url={https://www.nature.com/articles/ncomms7029.pdf}
+  }
+  @article{waxman1995,
+    title={Words as invitations to form categories: evidence from 12- to 13-month-old infants},
+    author={S R Waxman, D B Markow},
+    journal={Cogn Psychol. doi: 10.1006/cogp.1995.1016.},
+    year={1995},
+    url={https://www.sciencedirect.com/science/article/abs/pii/S001002858571016X}
+  }
+  @article{hussein2017,
+    title={Imitation Learning: A Survey of Learning Methods},
+    author={A. Hussein, M. Medhat Gaber, E. Elyan, C. Jayne},
+    journal={ACM Computing Surveys Volume 50 Issue 2 Article No.: 21 pp 1–35},
+    year={3017},
+    url={https://dl.acm.org/doi/10.1145/3054912}
+  }
+  @article{ziebart2008,
+    title={Maximum entropy inverse reinforcement learning},
+    author={B. D. Ziebart, A. L. Maas, J. A. Bagnell, and A. K. Dey},
+    journal={AAAI},
+    year={2008},
+    url={http://ai.stanford.edu/~amaas/papers/amaas_aaai.pdf}
+  }
+  @article{ross2010,
+    title={A Reduction of Imitation Learning and Structured Prediction to No-Regret Online Learning},
+    author={S. Ross, G. J. Gordon, J. A. Bagnell},
+    journal={arXivreprint arXiv:1011.0686},
+    year={2010},
+    url={https://arxiv.org/pdf/1011.0686.pdf}
+  }
+  @article{christiano2023,
+    title={Deep reinforcement learning from human preferences},
+    author={P. Christiano, J. Leike, T. B. Brown, M. Martic, S. Legg, D. Amodei},
+    journal={arXivreprint 	arXiv:1706.03741},
+    year={2023},
+    url={https://arxiv.org/pdf/1706.03741.pdf}
+  }
+  @article{knox2008,
+    title={TAMER: Training an Agent Manually via Evaluative Reinforcement},
+    author={W. B. Knox, P. Stone},
+    journal={IEEE 7th International Conference on Development and Learning},
+    year={2008},
+    url={https://www.cs.utexas.edu/~ai-lab/pubs/ICDL08-knox.pdf}
+  }
+  @article{,
+    title={},
+    author={},
+    journal={},
+    year={},
+    url={}
+  }
+  @article{,
+    title={},
+    author={},
+    journal={},
+    year={},
+    url={}
   }
 
 
