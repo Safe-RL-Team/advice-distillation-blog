@@ -24,6 +24,10 @@
 
 
 
+
+
+
+
 </script>
 
 <dt-article>
@@ -40,34 +44,53 @@
 
     <h1>Introduction</h1>
 
-    <p>Reinforcement Learning
-        <dt-cite key="suttonbarto96!?"/>
-        is a technique for allowing agents to explore their environments
-        and learn strategies for maximizing the amount of reward they collect from the environment.
+    <p><b>
+        <dt-cite key="suttonbarto2020">Reinforcement Learning</dt-cite>
+    </b>
+        is a machine learning technology in which agents explore their environments, receive reward and
+        learn strategies for maximizing the amount of reward they receive.
     </p>
 
-    TODO: explain what safe rl is and make it clear that this paper is not really about safe rl. A discussion on how
-    this could
-    be made to work in <b>safe</b> context is at the end
+    <p>The typical way in which agents learn is trough exploration of the environment and by receiving rewards.
+        Agents have to <i>"try out"</i> various actions in each state. In each particular state, the agent
+        <i>"chooses"</i> from a set of possible
+        action. Normally agents are learning from scratch and without any <i>"guidance"</i>.
+        Thus, they must try out particular combinations <b>(state, action)</b> pairs to
+        make sure it has <i>"found enough"</i> information about the environment.
+    </p>
 
-    TODO: explain normally how RL agents learn: by random exploration, Q Learning & Function approximation for large
-    problem setup.
-    Explain what are samples.
-
-    <p>While RL is innovative in the approach, it has the downside that it is very sample heavy
-        <dt-cite key="sampleheavy!?"/>
+    <p>RL has been employed successfully in solving some tasks with performance better than humans have been able to do.
+        However, the setting until now has been
+        <dt-cite key="mnih2013">quite limited</dt-cite>
         .
-        TODO: explain what heady is. Show examples
-        Usually, the more complex the problem the higher number of samples an agent requires learning from.
-        There were approaches to making an agent learn faster
-        <dt-cite key="learngaster!?"/>
-        and or smarter
-        <dt-cite key="learnsmarter!?"/>
+        Ideally, we wish to have agents that are able to solve from complex to
+        <dt-cite key="dsilver2017">very complex tasks</dt-cite>
+        .
+        This implies, to some extent, that the space (state, action) is one with a very high dimensionality. Combined
+        with the
+        random exploration technique, this forces the agent to do a lot of random, unguided exploration. This, in turn,
+        leads to
+        the
+        issue of requiring
+        <dt-cite key="barto90">high number of samples</dt-cite>
+        . For example, in obtaining at least 20% of human performance in <i>Atari Games</i>
+        the algorithms required at e least
+        <dt-cite key="hessel2017">10 million samples</dt-cite>
+        .
     </p>
 
-    <p>This is in stark contrast to how humans learn, though. Humans learn by imitating what their peers are doing
-        <dt-cite key="paper_cit_9"/>
-        or by being taught, typically by more expert peers (e.g. going to school, university or having a coach).
+    <p>This is in stark contrast to how humans learn, though. Humans start as children
+        <dt-cite key="lyons2007">imitating</dt-cite>
+        what other humans do.
+        They then continue imitation by learning
+        <dt-cite key="korteling2021">indirectly</dt-cite>
+        using
+        <dt-cite key="chopra2019">communication</dt-cite>
+        in
+        <dt-cite key="lynn2019">in natural language</dt-cite>
+        .
+        In this way, they are being told how to solve tasks,
+        typically by more expert peers (e.g. going to school, university or having a coach).
         During the learning process, students are receiving constant feedback from their peers to make sure their
         strategies for
         solving tasks at hand are appropriate.
@@ -75,7 +98,15 @@
         training and gets
         introduced to more complex tasks after he has a pretty good understanding on how to solve easier tasks.
     </p>
-    TODO: talk about dopamine
+    <p>Interestingly enough, research suggests that humans themselves are driven by inner rewards.
+        One of the main neurotransmitters is
+        <dt-cite key="juarez2016">dopamine</dt-cite>
+        . Its purpose is to encode
+        <dt-cite key="bayer2005">reward prediction error</dt-cite>
+        . Work has been done suggesting dopamine as
+        <dt-cite key="schultz1997">a signal driving learning</dt-cite>
+        .
+    </p>
 
     <p>Humans typically learn faster and require fewer samples.</p>
 
@@ -111,18 +142,37 @@
     TODO Talk about requiring less samples and also requiring less complex environments for learning.
 
     <p>This is achieved via augmenting the reward signal typical in RL setting. The teacher has the ability to present a
-        reward to the agent depending on how well it is following the given advice.</p>
+        reward to the agent depending on how well it is following the given advice. Thus, the teacher acts as a
+        <dt-cite key="macglashan2017">coach</dt-cite> and the <dt-cite key="arumugam2019">agent learns how to react to human feedback</dt-cite>.</p>
+
+    <li><dt-cite key="arumugam2019">making agents react to human feedback</dt-cite></li>
+
+    <p></p>
 
     <p>To understand how this work, we will
-        present the <b>Coaching-Augmented Markov Decision Process</b> formalism in the next section. We will then
+        present the <b>Coaching-Augmented Markov Decision Process</b> formalism in the next section.
+
+        We will then
         explain how
-        this formalism is used to leverage this tiered structure of learning using <b>Off-policy Learning</b>
-        <dt-cite key="off-policy-learning!?"/>
-        We will then present our contribution to how we made the algorithm make use of <b>On policy Learning</b>
-        <dt-cite key="on-policy-learning!?"/>
+        this formalism is used to leverage this tiered structure of learning using
+        <dt-cite key="munos2016"><b>Off-policy Learning</b></dt-cite>
+        <dt-cite key="precup2001"><b>see also</b></dt-cite>
+        .
+
+        We will then present our contribution to how we made the algorithm make use of
+        <d-cite key="suttonbarto2020"><b>On policy Learning</b></d-cite>
         .
         We will present some preliminary results, talk about the challenges we faced and then open up a discussions
         section.
+    </p>.
+
+    <p>Other attempts have been at enabling agents to learn <i>more like</i>humans do. This includes:
+        <ul>
+
+            <li><dt-cite key=""></dt-cite></li>
+            <li><dt-cite key=""></dt-cite></li>
+            <li><dt-cite key=""></dt-cite></li>
+        </ul>
     </p>
 
     TODO: Paper suggests tackling this issues by making the agent teachable. This means, make possible for humans to
@@ -381,7 +431,7 @@
     </p>
     <p>We tried to tackle this issue in our implementation. We reused the already existing
         <b>θ<sub>grounded</sub></b> by learning a mapper from the <i>new</i> type of advice to the <i>old one</i>.
-        Like this, the old policy continues  to work because of no change in the structure of parameters.</p>
+        Like this, the old policy continues to work because of no change in the structure of parameters.</p>
     <p>
         The mapping from c<sup>h</sup><sub>t</sub> to c<sup>l</sup><sub>t</sub> we learned via supervised learning.
         Our reasoning was that we can take advantage of the existing pairs (c<sup>h</sup><sub>t</sub>,
@@ -393,10 +443,11 @@
     </p>
 
     <p>The target of grounding is thus achieved by having a well grounded policy. This can accept multiple types of
-    advice. </p>
+        advice. </p>
     <p>π<sub>Φ</sub>(&centerdot;|s<sub>t</sub>, τ, <b><u>c<sub>t</sub></u></b>)</p>
     <p> where <b><u>c<sub>t</sub></u></b> represents the tuple
-        (c<sup>l</sup><sub>t</sub>, c<sup>h<sub>1</sub></sup><sub>t</sub>,  c<sup>h<sub>2</sub></sup><sub>t</sub>, ...).</p>
+        (c<sup>l</sup><sub>t</sub>, c<sup>h<sub>1</sub></sup><sub>t</sub>, c<sup>h<sub>2</sub></sup><sub>t</sub>, ...).
+    </p>
 
     <h3>Improvement</h3>
     <p>The ultimate goal is to obtain a policy</p>
@@ -406,10 +457,11 @@
     <p>
         Distillation can be done either:
     <ol>
-        <li>by distilling from the grounded policy to another intermediary policy that accepts even more complex, abstract,
+        <li>by distilling from the grounded policy to another intermediary policy that accepts even more complex,
+            abstract,
             and sparse type of advice
         </li>
-    <p>OR</p>
+        <p>OR</p>
         <li>by distilling to no advice, taking advantage of the already existing policies.</li>
     </ol>
     </p>
@@ -419,21 +471,21 @@
         (s<sub>1</sub>, a<sub>1</sub>,c<sub>1</sub>, r<sub>2</sub>),···,
         (s<sub>H-1</sub>,a<sub>H-1</sub>, c<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.</p>
 
-    <p> the agent optimizes </p>
+    <p> the agent optimizes:</p>
     <p>
         max<sub>θ</sub> <b>E</b><sub>(s<sub>t</sub>, a<sub>t</sub>, τ)<sub>t</sub>∼D(&centerdot;|s<sub>t</sub>, τ)</sub>
         [log π<sub>θ</sub>(a<sub>t</sub>|s<sub>t</sub>, τ)]</p>
     <p>thus eliminating the coaching functions.</p>
 
 
-
     <p>The advantage of advice distillation over <i>behavioral cloning</i> is that the agent accepts a more sparse and
-    abstract type of advice. This allows the agent to generalize better because the advice is invariant to internal
-    distributions shifts of the agent.</p>
+        abstract type of advice. This allows the agent to generalize better because the advice is invariant to internal
+        distributions shifts of the agent.</p>
 
     <h3>Evaluation</h3>
 
-    <p>Means simply taking π<sub>θ</sub> and compute the actual ammount of reward the environment provides. </p>
+    <p>During evaluation let the agent explore using π<sub>θ</sub> and compute the actual amount of reward the
+        environment provides. </p>
 
 
     <h1>Experimental setup</h1>
@@ -450,15 +502,129 @@
 
 <dt-appendix>
 </dt-appendix>
+http://www.incompleteideas.net/book/RLbook2020.pdf
 
 <script type="text/bibliography">
-  @article{gregor2015draw,
-    title={DRAW: A recurrent neural network for image generation},
-    author={Gregor, Karol and Danihelka, Ivo and Graves, Alex and Rezende, Danilo Jimenez and Wierstra, Daan},
-    journal={arXivreprint arXiv:1502.04623},
-    year={2015},
-    url={https://arxiv.org/pdf/1502.04623.pdf}
+@book{suttonbarto2020,
+    title={Reinforcement Learning},
+    author={Richard S. Sutton, Anrew G. Barto},
+    publisher={The MIT Press},
+    year={2020},
+    url={http://www.incompleteideas.net/book/RLbook2020.pdf},
+    isbn={ISBN 9780262039246}
   }
+  @article{mnih2013,
+    title={Playing Atari with Deep Reinforcement Learning},
+    author={Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, Martin Riedmiller},
+    journal={arXivreprint arXiv:1312.5602},
+    year={2013},
+    url={https://arxiv.org/pdf/1312.5602.pdf}
+  }
+  @article{dsilver2017,
+    title={Mastering the game of Go without human knowledge},
+    author={David Silver, Julian Schrittwieser, Karen Simonyan, Ioannis Antonoglou, Aja Huang, Arthur Guez, Thomas Hubert,
+    Lucas Baker, Matthew Lai, Adrian Bolton, Yutian Chen, Timothy Lillicrap, Fan Hui, Laurent Sifre, George van den Driessche, Thore Graepel & Demis Hassabis},
+    journal={Nature 550, 354–359},
+    year={2017},
+    url={https://www.nature.com/articles/nature24270}
+  }
+  @article{hessel2017,
+    title={Rainbow: Combining Improvements in Deep Reinforcement Learning},
+    author={Matteo Hessel, Joseph Modayil, Hado van Hasselt, Tom Schaul, Georg Ostrovski, Will Dabney, Dan Horgan, Bilal Piot, Mohammad Azar, David Silver},
+    journal={arXivreprint arXiv:1710.02298},
+    year={2017},
+    url={https://arxiv.org/pdf/1710.02298.pdf}
+  }
+  @article{lynn2019,
+    title={How humans learn and represent networks},
+    author={Christopher W. Lynn, Danielle S. Bassett},
+    journal={arXivreprint arXiv:1909.07186},
+    year={2019},
+    url={https://arxiv.org/pdf/1909.07186.pdf}
+  }
+  @article{barto90,
+    title={On the Computational Economics of Reinforcement Learning},
+    author={Andrew G. Barto, Santinder Pal Singh},
+    journal={Proceedings of the 1990 Summer School},
+    year={1990},
+    url={https://web.eecs.umich.edu/~baveja/Papers/summerschool.pdf}
+  }
+  @article{korteling2021,
+    title={Human- versus Artificial Intelligence},
+    author={E. Korteling, G. C. van de Boer-Visschedijk, R. A. M. Blankendaal, R. C. Boonekamp, A. R. Eikelboom},
+    journal={Frontiers in Artificial Intelligence},
+    year={2021},
+    url={https://www.frontiersin.org/articles/10.3389/frai.2021.622364/pdf}
+  }
+  @article{lyoms2007,
+    title={The hidden structure of overimitation},
+    author={Derek E Lyons 1, Andrew G Young, Frank C Keil},
+    journal={PubMed PMID: 18056814 PMCID: PMC2148370},
+    year={2007},
+    url={https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2148370/pdf/zpq19751.pdf}
+  }
+  @article{chopra2019,
+    title={The first crank of the cultural ratchet: Learning and transmitting concepts through language},
+    author={Sahila Chopra, Michael Henry Tessler, Noah D. Goodman},
+    journal={CogSci},
+    year={2019},
+    url={https://www.semanticscholar.org/paper/The-first-crank-of-the-cultural-ratchet%3A-Learning-Chopra-Tessler/68303e377b6999f5634e71e7c1bd709c10fcef33}
+  }
+  @article{juarez2016,
+    title={The Role of Dopamine and Its Dysfunction as a Consequence of Oxidative Stress},
+    author={Hugo Juárez Olguín, David Calderón Guzmán, Ernestina Hernández García, Gerardo Barragán Mejía},
+    journal={Oxidative Medicine and Cellular Longevity Volume 2016, Article ID 9730467},
+    year={2016},
+    url={https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4684895/pdf/OMCL2016-9730467.pdf}
+  }
+  @article{bayer2005,
+    title={Midbrain dopamine neurons encode a quantitative reward prediction error signal},
+    author={Hannah M Bayer, Paul W Glimcher},
+    journal={Pub Med Neuron PMID: 15996553 PMCID: PMC1564381},
+    year={2005},
+    url={https://pubmed.ncbi.nlm.nih.gov/15996553/}
+  }
+  @article{schultz1997,
+    title={A Neural Substrate of Prediction and Reward},
+    author={W. Schultz, P. Dayan, P. R. Montague},
+    journal={Science 14 Mar 1997 Vol 275, Issue 5306 pp. 1593-1599},
+    year={1997},
+    url={https://www.science.org/doi/abs/10.1126/science.275.5306.1593}
+  }
+  @article{munos2016,
+    title={Safe and efficient off-policy reinforcement learning},
+    author={Munos, R., Stepleton, T., Harutyunyan, A., Bellemare,M},
+    journal={Advances in Neural Information Processing Systems, pp. 1054–1062},
+    year={2016},
+    url={https://proceedings.neurips.cc/paper/2016/file/c3992e9a68c5ae12bd18488bc579b30d-Paper.pdf}
+  }
+  @article{precup2001,
+    title={Off-policy temporal-difference learning with function approximation},
+    author={Munos, R., Stepleton, T., Harutyunyan, A., Bellemare,M},
+    journal={International Conference on Machine Learning, pp. 417–424},
+    year={2001},
+    url={http://incompleteideas.net/papers/PSD-01.pdf}
+  }
+  @article{arumugam2019,
+    title={Deep Reinforcement Learning from Policy-Dependent Human Feedback},
+    author={D. Arumugam, J. K. Lee, S. Saskin, M. L. Littman},
+    journal={arXivreprint arXiv:1902.04257},
+    year={2019},
+    url={https://arxiv.org/pdf/1902.04257.pdf}
+  }
+  @article{macglashan2017,
+    title={Interactive Learning from Policy-Dependent Human Feedback},
+    author={James MacGlashan, Mark K Ho, Robert Loftin, Bei Peng, Guan Wang, David Roberts, Matthew E. Taylor, Michael L. Littman},
+    journal={arXivreprint 	arXiv:1701.06049},
+    year={2017},
+    url={https://arxiv.org/pdf/1701.06049.pdf}
+  }
+
+
+
+
+
+
 
 
 
