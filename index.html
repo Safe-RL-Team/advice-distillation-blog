@@ -4,31 +4,31 @@
 
 <script type="text/front-matter">
   title: "Teachable Reinforcement Learning via Advice Distillation"
-  description: "Description of the post"
+  description: "An explanation of advice distillation with off-policy learning and an extension making it on-policy"
   authors:
-  - Claire, Sturgil:
+  - Claire, Sturgill: https://github.com/cesturgill
   - Mihai, Dumitrescu: https://github.com/midumitrescu
   affiliations:
-  - Google Brain: http://g.co/brain
+  - BCCN Berlin: https://www.bccn-berlin.de/
   - BCCN Berlin: https://www.bccn-berlin.de/
 
 </script>
 
 <dt-article>
     <h1>Teachable Reinforcement Learning via Advice Distillation</h1>
-    <h2>A description of the article</h2>
+    <h2>An explanation of advice distillation with off-policy learning and an extension making it on-policy</h2>
     <dt-byline></dt-byline>
 
-    <h1>Abstract 1</h1>
-    // Bullet points
-    1. RL is promising
-    2. But typically high sample space
-    3. Want to take advantage of other successful models of teaching/learning and humans present a nice inspiration
-    4. Some methods have been introduced but present some limitations.
-    5. Paper presents a new idea/approach
-    6. We introduce the mathematical formalism and discuss some results
-    Our contribution
-    Implications
+    <h1>Abstract</h1>
+    <p><i>Reinforcement Learning</i> is a very promising machine learning technique but has the issue of requiring
+        a very large amount of data for learning.
+        The paper we investigated tries to tackle this issue by implementing a learning scheme similar to how humans learn:
+        gradual, first mastering easy tasks before trying out more complex ones.
+        The approach is to gradually teach an agent to follow coaching instructions <b>increasing</b> in complexity in a process called <b>distillation</b>.
+        We provide an in depth mathematical explanation on how learning works with distillation.</p>
+
+        <p>Our extension of the paper was to create an alternate way of distilling coaching instructions and compare it to the paper's
+            original approach. Our method showed a smaller initial drop in performance at the start of distillation.</p>
 
     <h1>Introduction</h1>
 
@@ -795,42 +795,6 @@
     year={2008},
     url={https://www.cs.utexas.edu/~ai-lab/pubs/ICDL08-knox.pdf}
   }
-  @article{,
-    title={},
-    author={},
-    journal={},
-    year={},
-    url={}
-  }
-  @article{,
-    title={},
-    author={},
-    journal={},
-    year={},
-    url={}
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
 
 <style>
