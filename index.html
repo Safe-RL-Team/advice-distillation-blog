@@ -30,7 +30,7 @@
         <p>Our extension of the paper was to create an alternate way of distilling coaching instructions and compare it to the paper's
             original approach. Our method showed a smaller initial drop in performance at the start of distillation.</p>
 
-    <h1>Introduction</h1>
+    <h1 id="intro">Introduction</h1>
 
     <p><b>
         <dt-cite key="suttonbarto2020">Reinforcement Learning</dt-cite>
@@ -64,8 +64,8 @@
         the
         issue of requiring
         <dt-cite key="barto90">high number of samples</dt-cite>
-        . For example, in obtaining at least 20% of human performance in <i>Atari Games</i>
-        the algorithms required at least
+        . For example, the algorithms required in obtaining at least 20% of human performance playing <i>Atari Games</i>
+         at least
         <dt-cite key="hessel2017">10 million samples</dt-cite>
         .
     </p>
@@ -140,9 +140,9 @@
     <p>The paper makes the claim that it <i>["proposes a framework for training automated agents using similarly
         rich interactive supervision"]</i> that we do not regard as being true. The advice implemented in the codebase
         is not
-        rich at all, coming mostly in the shape of 2-D vector. This is described in more detail in the <i>Experimental
-            Setup</i>
-        section. We will suggest in the <i>Results and Discussion</i> section a possible method to extend this to a more
+        rich at all, coming mostly in the shape of 2-D vector. This is described in more detail in <a href="#setup"><i>Experimental
+            Setup</i></a>.
+        We will suggest in <a href="#nlp_extension"><i>Conclusion</i></a> a possible method to extend this to a more
         rich
         language.
     </p>
@@ -158,7 +158,7 @@
     </p>
 
     <p>To understand how this works, we will
-        present the <b>Coaching-Augmented Markov Decision Process</b> formalism in the next section.
+        present the <a href="#camdp"><b>Coaching-Augmented Markov Decision Process</b> formalism</a>.
 
         We will then
         explain how
@@ -183,7 +183,7 @@
             <dt-cite key="ziebart2008">closely mimicking demonstrated behaviour</dt-cite>
         </li>
         <li>No Regret Learning:
-            <dt-cite key="">DAgger</dt-cite>
+            <dt-cite key="ross2010">DAgger</dt-cite>
         </li>
         <li>
             <dt-cite key="christiano2023">Preference Learning</dt-cite>
@@ -258,10 +258,10 @@
         between trying out random new actions and commiting to already known high reward ones. It is still an unsolved
         problem
         to find this optimal balance. This is called the <b>exploration/exploitation dilemma</b> agents typically face
-        and quickly explains the need for many samples. This was described in the <i>Introduction</i> section</p>
+        and quickly explains the need for many samples. This was described in <a href="#intro"><i>Introduction</i></a></p>.
 
 
-    <h2>Coaching-Augmented Markov Decision Processes</h2>
+    <h2 id="camdp">Coaching-Augmented Markov Decision Processes</h2>
 
     <p>The paper extends the classical <b>MDP</b> by providing two extensions:
     <ol>
@@ -288,12 +288,12 @@
     </ol>
     </p>
 
-    <p>but could be extended to include natural language or other richer types of advice (see the <i>Conclusions</i>
-        section).</p>
+    <p>but could be extended to include natural language or other richer types of advice
+        (see <a href="./#nlp_extension"><i>Conclusion</i></a>).</p>
 
     <p>
 
-        Thus, we formally define the <b>Coaching Augmented MDP (CAMDP)</b> = {S, A, T, R<sub>CAMDP</sub>, ρ, γ, p,
+        Thus, we formally define the <b>Coaching Augmented MDP (CAMDP)</b> as the tuple {S, A, T, R<sub>CAMDP</sub>, ρ, γ, p,
         C}.
 
         The agent then captures trajectories of the shape:
@@ -481,7 +481,7 @@
         environment provides. </p>
 
 
-  <h1>Experimental setup</h1>
+  <h1 id="setup">Experimental setup</h1>
 
   <p>To test the paper's approach, we compared the method of advice distillation described above with a simple baseline case: training a <b>multi-layer perceptron (mlp)</b> to convert <b>high-level</b> to <b>low-level advice</b>. The basic steps for our method are:</p>
 
@@ -505,13 +505,13 @@
 
   <p>One weakness of our mlp architecture is that it does not have any memory of previous environmental states. In our input generation the agent positions are independent of each other, but in an actual environment the next position would be based on the current position and velocity and the action taken. We did not include this because we wanted to keep our architecture simple and focused on the advice rather than the environment itself. But having an understanding of previous states and actions is one advantage the advice distillation agent has over this baseline. Future experiments could expand this mlp to take this information into account, for example changing the output to a time series representing the best actions to take over several time steps to reach the waypoint.</p>
 
-  <p>The advice converter was trained using <b>stochastic gradient descent</b> with 5000 batches of 10,000 values each. The step size was initially 0.001 and was annealed to 0.0001 after 100 epochs. After a training time of about 7 hours, the mlp achieved a final loss of about 2.47. See the <i>Results</i> section for a more detailed analysis of the training loss and its implications for the mlp's performance. During the distillation phase, the offset waypoint advice that would normally be passed directly to the agent was instead run through this mlp, and the mlp's output was passed to the agent instead.</p>
+  <p>The advice converter was trained using <b>stochastic gradient descent</b> with 5000 batches of 10,000 values each. The step size was initially 0.001 and was annealed to 0.0001 after 100 epochs. After a training time of about 7 hours, the mlp achieved a final loss of about 2.47. See <a href="#results"><i>Results</i></a> for a more detailed analysis of the training loss and its implications for the mlp's performance. During the distillation phase, the offset waypoint advice that would normally be passed directly to the agent was instead run through this mlp, and the mlp's output was passed to the agent instead.</p>
 
-  <p>For our experiment, both our method and the paper's method used the <b>same grounded policy θ<sub>grounded</b>, which was run for 320 iterations on directional advice. For the paper's method, a new policy <b>Φ<sub>new</sub></b> that took offset waypoint advice was created, and <b>θ<sub>grounded</b> was used for off-policy relabeling.</p>
+  <p>For our experiment, both our method and the paper's method used the <b>same grounded policy θ<sub>grounded</b>, which was run for 320 iterations on directional advice. For the paper's method, a new policy <b>Φ<sub>new</sub></b> that took offset waypoint advice was created, and <b>θ<sub>grounded</sub></b> was used for off-policy relabeling.</p>
 
-  <p> For our method, <b>θ<sub>grounded</b> was reused and the directional advice was replaced with the output of our pretrained advice-conversion mlp. Our method was run for 900 more iterations, and the paper's method was only run for 440 more iterations before an issue caused the training to stop early. As a result, we focused on the first 440 post-grounding iterations for our analysis.</p>
+    <p> For our method, <b>θ<sub>grounded</sub></b> was reused and the directional advice was replaced with the output of our pretrained advice-conversion mlp. Our method was run for 900 more iterations, and the paper's method was only run for 440 more iterations before an issue caused the training to stop early. As a result, we focused on the first 440 post-grounding iterations for our analysis.</p>
 
-  <h1>Results and Discussion</h1>
+  <h1 id="results">Results and Discussion</h1>
 
   <p>We measured the loss (mean squared error) of our advice-conversion mlp during pretraining as an indicator of how well it could approximate the real directional advice.</p>
 
@@ -605,7 +605,7 @@
 
   <p>Our method's ability to switch to a higher-level advice type without a drop in performance may be useful in situations where a smooth transition between advice types is necessary. However, because the mlp's output will currently always be at least somewhat different from the actual best action we suspect that the original advice distillation method will eventually converge to a better performance. While our method accomplishes the basic goal of allowing an agent trained on low-level advice to understand high-level advice using only a simple mlp architecture, more distillation iterations would be needed to compare the long-term performance of the two methods.</p>
 
-  <h1>Conclusion</h1>
+  <h1 id="conclusion">Conclusion</h1>
 
   <p>The point-maze agent learns quickly when given low-level directional advice, but its performance drops when switching to high-level offset waypoint advice at the start of the distillation phase. Because the new advice is an approximation of the old directional advice, our advice-conversion method experiences less of a drop and initially performs better than the paper's advice-distillation method.</p>
 
@@ -617,7 +617,7 @@
   <p><b>Future Research Directions</b></p>
   <p>Simply running the phases of our method for longer would be a good future experiment, allowing the later performance of the two methods to be compared. There are also several tweaks to our method that could be tested in future experiments. The time-convergence tradeoff of the advice-conversion mlp could be explored, and the mlp could be allowed to continue training during the distillation phase or even integrated into the agent's own network rather than being separate. Both the paper's and our methods could also be applied to other types of environments and advice, in order to see if the results hold across environment and advice types.</p>
 
-  <p>Finally, we addressed earlier the critique that the advice provided in this experiment is fairly simple and low-bandwidth, just being a 2-D vector. This is not really rich in a comparable way to the advice humans learn from. It would be a very interesting future experiment to have a real natural language processing layer that could parse human language into an advice signal that could be provided to and interpreted by a RL agent. This addition would allow much easier human coaching, as coaches would not need to have a technical background and would not need to provide low-level, possibly cryptic advice, making this paper more relevant to practical situations.</p>
+  <p id="nlp_extension">Finally, we addressed earlier the critique that the advice provided in this experiment is fairly simple and low-bandwidth, just being a 2-D vector. This is not really rich in a comparable way to the advice humans learn from. It would be a very interesting future experiment to have a real natural language processing layer that could parse human language into an advice signal that could be provided to and interpreted by a RL agent. This addition would allow much easier human coaching, as coaches would not need to have a technical background and would not need to provide low-level, possibly cryptic advice, making this paper more relevant to practical situations.</p>
 
 </dt-article>
 
