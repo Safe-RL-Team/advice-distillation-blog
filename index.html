@@ -4,45 +4,620 @@
 
 <script type="text/front-matter">
   title: "Teachable Reinforcement Learning via Advice Distillation"
-  description: "Description of the post"
+  description: "An explanation of advice distillation with off-policy learning and an extension making it on-policy"
   authors:
-  - Claire, Sturgil:
+  - Claire, Sturgill: https://github.com/cesturgill
   - Mihai, Dumitrescu: https://github.com/midumitrescu
   affiliations:
-  - Google Brain: http://g.co/brain
   - BCCN Berlin: https://www.bccn-berlin.de/
+  - BCCN Berlin: https://www.bccn-berlin.de/
+
 </script>
 
 <dt-article>
-  <h1>Teachable Reinforcement Learning via Advice Distillation</h1>
-  <h2>A description of the article</h2>
-  <dt-byline></dt-byline>
+    <h1>Teachable Reinforcement Learning via Advice Distillation</h1>
+    <h2>An explanation of advice distillation with off-policy learning and an extension making it on-policy</h2>
+    <dt-byline></dt-byline>
 
-  <h1>Abstract 1</h1>
-  <p>This is the first paragraph of the article.</p>
-  <p>We can also cite <dt-cite key="gregor2015draw"></dt-cite> external publications.</p>
+    <h1>Abstract</h1>
+    <p><i>Reinforcement Learning</i> is a very promising machine learning technique but has the issue of requiring
+        a very large amount of data for learning.
+        The paper we investigated tries to tackle this issue by implementing a learning scheme similar to how humans learn:
+        gradual, first mastering easy tasks before trying out more complex ones.
+        The approach is to gradually teach an agent to follow coaching instructions <b>increasing</b> in complexity in a process called <b>distillation</b>.
+        We provide an in depth mathematical explanation on how learning works with distillation.</p>
 
-  <h1>Introduction</h1>
-  <p>Text for paragraph 2</p>
+        <p>Our extension of the paper was to create an alternate way of distilling coaching instructions and compare it to the paper's
+            original approach. Our method showed a smaller initial drop in performance at the start of distillation.</p>
 
-  <h1>Background</h1>
-  <p>Text for paragraph 3</p>
+    <h1 id="intro">Introduction</h1>
 
-  <h2>Problem setting</h2>
-  <p>Text for paragraph 3</p>
+    <p><b>
+        <dt-cite key="suttonbarto2020">Reinforcement Learning</dt-cite>
+    </b>
+        is a machine learning technique in which agents explore their environments, receive rewards and
+        learn strategies for maximizing the amount of received reward. Desired behaviour is <i>reinforced</i> through
+        the
+        reward hence the name <i>Reinforcement Learning.</i>
+    </p>
 
-  <h1>Method</h1>
-  <p>Text for paragraph 3</p>
+    <p>The typical way in which agents learn is through exploration of the environment and by receiving rewards when
+        executing desired actions or reaching certain states.
+        Agents have to <i>"try out"</i> various actions in each state by
+        <i>"choosing"</i> from a set of possible
+        actions. Normally agents are learning from scratch and without any <i>"guidance"</i>.
+        Thus, they must try out many <b>(state, action)</b> pairs to
+        make sure they have exhaustively found out <i>"enough"</i> information about the environment.
+    </p>
 
-  <h1>Experimental setup</h1>
-  <p>Text for paragraph 3</p>
+    <p>RL has been employed successfully in solving some tasks with performance better than humans have been able to do.
+        However, the setting until now has been
+        <dt-cite key="mnih2013">quite limited</dt-cite>
+        .
+        Ideally, we wish to have agents that are able to solve from complex to
+        <dt-cite key="dsilver2017">very complex tasks</dt-cite>
+        .
+        Usually complex tasks present the challenge of having high dimensionality (state, action) space. Combined
+        with the
+        random exploration technique, this forces the agent to do a lot of random, unguided exploration. This, in turn,
+        leads to
+        the
+        issue of requiring
+        <dt-cite key="barto90">high number of samples</dt-cite>
+        . For example, the algorithms required in obtaining at least 20% of human performance playing <i>Atari Games</i>
+         at least
+        <dt-cite key="hessel2017">10 million samples</dt-cite>
+        .
+    </p>
 
-  <h1>Results and Discussion</h1>
-  <p>Text for paragraph 3</p>
+    <p>This is in stark contrast to how humans learn, though. Humans start as children
+        <dt-cite key="lyoms2007">imitating</dt-cite>
+        what other humans do.
+        They then continue imitation by learning
+        <dt-cite key="korteling2021">indirectly</dt-cite>
+        using
+        <dt-cite key="chopra2019">communication</dt-cite>
+        in
+        <dt-cite key="lynn2019">in natural language</dt-cite>
+        .
+        <dt-cite key="morgan2015">Human communication</dt-cite>
+        is considered
+        low effort and
+        <dt-cite key="waxman1995">high bandwidth</dt-cite>
+        .
+        In this way, humans are told how to solve tasks,
+        typically by more expert peers (e.g. going to school, university or having a coach).
+        During the learning process, students receive constant feedback from their peers on how well they do. Thus
+        humans quickly calibrate to make sure that task solving strategies are appropriate.
+        The experts also usually use a complex stepwise strategy for teaching. The student usually starts with some very
+        basic
+        training and gets
+        introduced to more complex tasks after he has a pretty good understanding on how to solve easier tasks.
+    </p>
+    <p>Moreover, humans typically learn fast and require fewer samples when compared to typical RL techniques.</p>
+    <p>Interestingly enough, research suggests that humans themselves are driven by inner rewards.
+        One of the main neurotransmitters is
+        <dt-cite key="juarez2016">dopamine</dt-cite>
+        . Its purpose is to encode
+        <dt-cite key="bayer2005">reward prediction error</dt-cite>
+        . Work has been done suggesting dopamine is a very good candidate signal for
+        <dt-cite key="schultz1997">driving learning</dt-cite>
+        . This potentially mirrors the purpose of reward signals in reinforcement learning.
+    </p>
 
-  <h1>Conclusion</h1>
-  <p>Text for paragraph 3</p>
+    <p>
+        <dt-cite key="watkins2023">The paper we investigated</dt-cite>
+        suggests a strategy to reduce the number of samples agents require
+        by enabling agents to follow a similar stepwise learning
+        strategy.
+        More concretely, agents are made
+        <dt-cite key="arumugam2019">teachable</dt-cite>
+        i.e. learn how to follow instructions
+        from humans.
+        The teachers are giving instructions to the agent on how to solve intermediary steps of a task and are not
+        allowed to directly
+        control the agent's movements. The paper calls these instructions <b>advice</b>.
+    </p>
 
+    <p>Similarly to the stepwise school curriculum of humans, the agents are trained on various levels of complexity of
+        the <b>advice</b>.
+        The paper suggests 4 steps of learning:
+    <ol>
+        <li><b>Grounding</b> - teaching the agent how to follow, simple, <i>low level <b>advice</b></i></li>
+        <li><b>Grounding to multiple types of advice</b> - teaching the agent how to follow, tuples of simple, <i>low
+            level <b>advice</b></i></li>
+        <li><b>Improvement to higher level advice</b> - teaching the grounded agent to follow more complex, <i>higher
+            level <b>advice</b></i></li>
+        <li><b>Improvement to advice independence</b> - removing the teacher completely and allowing the agent to
+            interact
+            with its environment independently
+        </li>
+    </ol>
+    </p>
+
+    <p>After learning, the agent goes through a typical <b>evaluation</b> phase to test its performance.</p>
+
+    <p>The paper makes the claim that it <i>["proposes a framework for training automated agents using similarly
+        rich interactive supervision"]</i> that we do not regard as being true. The advice implemented in the codebase
+        is not
+        rich at all, coming mostly in the shape of 2-D vector. This is described in more detail in <a href="#setup"><i>Experimental
+            Setup</i></a>.
+        We will suggest in <a href="#nlp_extension"><i>Conclusion</i></a> a possible method to extend this to a more
+        rich
+        language.
+    </p>
+
+    <p>Tiered learning, also called <b>distillation</b> and formally defined later, is achieved via augmenting the
+        reward
+        signal typical in an RL setting. The teacher has the ability to present a
+        reward to the agent depending on how well it is following the given advice. Thus, the teacher acts as a
+        <dt-cite key="macglashan2017">coach</dt-cite>
+        and the
+        <dt-cite key="arumugam2019">agent learns how to react to human feedback</dt-cite>
+        .
+    </p>
+
+    <p>To understand how this works, we will
+        present the <a href="#camdp"><b>Coaching-Augmented Markov Decision Process</b> formalism</a>.
+
+        We will then
+        explain how
+        this formalism is used to leverage this tiered structure of learning using
+        <dt-cite key="munos2016"><b>Off-policy Learning</b></dt-cite>
+        <dt-cite key="precup2001"><b>see also</b></dt-cite>
+        .
+
+        We will then present our contribution to how we made the algorithm make use of
+        <d-cite key="suttonbarto2020"><b>On policy Learning</b></d-cite>
+        .
+        We will present some preliminary results, talk about the challenges we faced and then discuss our findings.
+    </p>
+    .
+
+    <p>Other attempts have been made at enabling agents to learn <i>more like</i> humans do. These include:
+    <ul>
+
+        <li>
+            <dt-cite key="morgan2015">imitation learning</dt-cite>
+            i.e.
+            <dt-cite key="ziebart2008">closely mimicking demonstrated behaviour</dt-cite>
+        </li>
+        <li>No Regret Learning:
+            <dt-cite key="ross2010">DAgger</dt-cite>
+        </li>
+        <li>
+            <dt-cite key="christiano2023">Preference Learning</dt-cite>
+        </li>
+    </ul>
+    </p>
+
+    <p>The big disadvantage of these techniques, though, is the low bandwidth of communication.
+        This means that little
+        <dt-cite key="knox2008">information</dt-cite>
+        is extracted from each interaction with humans.
+    </p>
+
+
+    <h1>Background</h1>
+    <h2>Markov Decision Processes</h2>
+    <p>RL typically works by implementing the <b>Markov Decision Process</b> formalism. The MDP is defined as a tuple
+        {S, A, T, R, ρ, γ, p} where
+    <ol>
+        <li>S is the <i>state space</i> and represents valid positions where the agent could be found at any time</li>
+        <li>A(s) is the <i>action space</i> and represents the valid actions that an agent can take while in a
+            particular state
+        </li>
+        <li>T(s<sub>t</sub>, a, s<sub>t+1</sub>) is the <i>transition dynamic</i> and represents the probability of
+            arriving at
+            <b>s<sub>t+1</sub></b> if at time t the agent was at <b>s<sub>t</sub></b> and executing action <b>a</b>
+        </li>
+        <li>R(s, a) is the <i>reward</i> that an agent receives while in state <b>s</b> and executing action <b>a</b>
+        </li>
+        <li>ρ(s<sub>0</sub>) is the <i>initial state distribution</i> representing where the agent starts each episode
+        </li>
+        <li>γ is the <i>discount factor</i> balancing how important future rewards vs immediate ones are</li>
+        <li>p(τ) is the <i>distribution over tasks</i> i.e. what kind of task the agent is supposed to solve</li>
+    </ol>
+    </p>
+
+    <p>The agent decides on an action to take at each time step <b><i>t</i></b>. A set of decisions the agent takes is
+        called a
+        <b>policy</b> and is typically denoted by <b>π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ)</b>. The policy is
+        called
+        <b>θ</b> and is usually implemented by a probability distribution on the set <b>A</b>.
+
+        The agent thus interacts with the environment and collects <b>trajectories</b> of the shape</p>
+    <p>
+        D = {(s<sub>0</sub>,a<sub>0</sub>,r<sub>1</sub>),(s<sub>1</sub>,a<sub>1</sub>,r<sub>2</sub>),···
+        ,(s<sub>H-1</sub>,a<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.
+    </p>
+
+
+    <h3>Solving the <b>MDP</b></h3>
+    <p>The objective of a multi task <b>MDP</b> is to find the <b>policy θ<i></i></b> that maximizes the amount of
+        future discounted rewards. Formally, it looks for</p>
+    <p>
+
+        max<sub>θ</sub> [<b>E</b><sub>a<sub>t</sub>∼π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ)</sub>(∑<sup>∞</sup><sub>t=0</sub>
+        γ<sup>t</sup>r(s<sub>t</sub>, a<sub>t</sub>, τ)>)]
+
+    </p>
+
+    <p>
+        where <b>E(</b>X<b>)</b>=&lt;X&gt; represents the expected value of the random variable X.
+    </p>
+
+    <h3>Exploration/exploitation dilemma</h3>
+
+    <p>Typically agents need to execute random actions to discover trajectories which prove to be of high reward. In
+        case such
+        are found, the agent increases the probability of taking similar actions in the future. Because of high
+        dimensional <b>(state, action)</b> space,
+        the agent typically needs to try out a lot of combinations to make sure it found the best one. The agent always
+        needs a balance
+        between trying out random new actions and commiting to already known high reward ones. It is still an unsolved
+        problem
+        to find this optimal balance. This is called the <b>exploration/exploitation dilemma</b> agents typically face
+        and quickly explains the need for many samples. This was described in <a href="#intro"><i>Introduction</i></a></p>.
+
+
+    <h2 id="camdp">Coaching-Augmented Markov Decision Processes</h2>
+
+    <p>The paper extends the classical <b>MDP</b> by providing two extensions:
+    <ol>
+        <li>C = {c<sub>t</sub>}, the set of <i>coaching functions</i>
+            where <b>c<sub>t</sub></b> represents advice given to the agent at time <b><i>t</i></b>.
+        </li>
+        <li>R<sub>CMDP</sub>=R(s,a) + R<sub>coach</sub>(s,a), where <b>R(s,a)</b> is the previous reward presented by
+            the
+            environment and
+            <b>R<sub>coach</sub>(s,a)</b> represents the additional reward the coach provides if the agent follows his
+            advice.
+        </li>
+    </ol>
+    </p>
+
+    <p><br/><b>c<sub>j</sub></b> used in the paper is either:
+    <ol>
+        <li>Cardinal Advice <i>(North (0,1), South (0, -1), East(-1, 0) or West(1, 0)</i></li>
+        <li>Directional Advice <i>(e.g. Direction (0.5, 0.5))</i></li>
+        <li>Waypoint Advice <i>(e.g. Go To (3,1))</i></li>
+        <li>Offset Waypoint Advice where a waypoint <i>(e.g. Go To (3,1))</i> is considered relative to the agent's
+            position
+        </li>
+    </ol>
+    </p>
+
+    <p>but could be extended to include natural language or other richer types of advice
+        (see <a href="./#nlp_extension"><i>Conclusion</i></a>).</p>
+
+    <p>
+
+        Thus, we formally define the <b>Coaching Augmented MDP (CAMDP)</b> as the tuple {S, A, T, R<sub>CAMDP</sub>, ρ, γ, p,
+        C}.
+
+        The agent then captures trajectories of the shape:
+    </p>
+
+    <p>D = {(s<sub>0</sub>,a<sub>0</sub>,c<sub>0</sub>
+        ,r<sub>1</sub>),(s<sub>1</sub>,a<sub>1</sub>,c<sub>1</sub>,r<sub>2</sub>),···
+        ,(s<sub>H-1</sub>,a<sub>H-1</sub>, c<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.</p>
+
+    <p>
+        The new optimization problem is to find the <i>best</i> policy <b>θ</b> that maximizes rewards from <b>both</b>
+        the environment
+        and the coaching functions i.e.
+    </p>
+    <p>max<sub>θ</sub> [<b>E</b><sub>a<sub>t</sub>∼π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ,
+        c<sub>t</sub>)</sub>(∑<sup>∞</sup><sub>t=0</sub> γ<sup>t</sup>r(s<sub>t</sub>, a<sub>t</sub>, c<sub>t</sub>,
+        τ)>)]</p>
+
+    <p>representing an agent that interacts with the environment and has access to advice presented in the form of
+        coaching functions <b>c<sub>t</sub></b>.
+    </p>
+
+    <p>The big advantage of <b>CAMDP</b> over plain <b>MDP</b> is that it formalizes the interaction of the agent with
+        a <i>human in the loop trainer</i>. The agent learns that <i>following human instructions/advice provides
+            reward</i> and it starts doing so, enabling the agent to take advantage of <i>expert knowledge</i>.
+    </p>
+
+    <h1>Method</h1>
+    <p>Our target is to quickly train agents that are able to solve complex tasks.
+        Considering the <i>Exploration/exploitation dilemma</i>, we would want agents that quickly find high reward
+        policies eliminating a lot of random exploration.</p>
+    <p>The paper suggests a tier based teaching scheme, speeding up learning
+        versus typical <b>MDP</b>.
+    </p>
+    <p>
+        This is done by:
+    <ol>
+        <li>making the agent follow the coaching it receives</li>
+        <li>introducing increasingly complex coaching</li>
+        <li>guiding the agent to the goal</li>
+        <li>allowing him to quickly understand that specific <i>policies</i> provide <b> high reward</b></li>
+        <li>eliminate the coaching</li>
+        <li>allow the agent to follow the already found <b>high reward</b> policies</li>
+    </ol>
+    <br/>
+    <p> The paper introduces the following phases:
+    <ol>
+        <li><b>Grounding</b> - with the focus of making the agent interpret and follow <i>low level, simple</i> <b>advice</b>
+        </li>
+        <li><b>Improvement</b>, which is of two types:
+            <ol>
+                <li>from one type of <b>advice</b> to another type of <b>advice</b> - typically from <i>low level,
+                    simple</i> <b>advice</b> to
+                    <i>high level, more complex</i> <b>advice</b>
+                </li>
+                <li>from one type of <b>advice</b> to <b>no</b> <b>advice</b> - allowing the agent to figure out
+                    policies
+                    that allow him to decide independently on next actions
+                </li>
+            </ol>
+        </li>
+        <li><b>Evaluation</b> - which represents the phase in which the agent does not learn anymore and the already
+            learned policy is evaluated
+        </li>
+    </ol>
+
+    </p>
+    <h3>Grounding</h3>
+    <p>The main objective of grounding is to make the agent follow/interpret the provided <b>advice</b>.
+        The big advantage vs. plain <b>MDP</b> solving tasks is that the agent can be trained on a <i>very simple</i>
+        environment. The trajectories can be a lot simpler/shorter than the ones in a complex environment, where the
+        agent
+        must follow many steps to reach a goal (e.g. a game or a maze).
+    </p>
+    <p>Theoretically the advice in the grounding phase can be of any nature. However, chosen wisely it can support the
+        idea of tiered
+        learning. Therefore, <i>the grounding</i> phase is the candidate for the simplest available advice i.e.
+        <b>Directional Advice</b>.
+        At every time step, the agent is rewarded with the dot product between the advised direction and the action it
+        took.
+        E.g. Should the agent be advised to move up (i.e. Direction (0, 1)) and he moves in direction (0, 0.5) he will
+        be rewarded with <(0, 1) * (0, 0.5)> = 0.5.<br/>
+        Should he move in direction (1, -0.5) i.e. diagonally down, he will receive a negative reward of
+        <(0, 1) * (1, -0.5)> = - 0.5
+    </p>
+
+    <p>By applying the framework of <b>CAMDP</b> with the provided <i>low-level</i> advice, then we will obtain the
+        grounded
+        policy</p>
+    <p><b>π<sub>θ<sub>grounded</sub></sub>(&centerdot;|s<sub>t</sub>, τ, c<sub>low level, t</sub>)</b></p>
+
+    <p>i.e. a policy that can take the state <b>s,</b> target <b>τ</b> and the <i>low level</i> advice <b>c<sub>t</sub></b> and provides
+        a probability distribution of next actions.</p>
+
+    <h3><b>Distillation</b> to other types of advice</h3>
+    <p>Once we have a policy able to interpret the simplest type of advice, we can use it to more quickly teach the agent
+        other types of advice.
+    </p>
+    <p>The process of using <b>one type</b> of advice to more quickly learn <b>another one</b> is called <b>distillation</b> and represents
+        the key innovation of this paper.</p>
+
+    <p>Formally, the agent gathers trajectories of the shape:</p>
+    <p>
+        D = { (s<sub>0</sub>, a<sub>0</sub>,c<sup>l</sup><sub>0</sub>, c<sup>h</sup><sub>0</sub>, r<sub>1</sub>),
+        (s<sub>1</sub>, a<sub>1</sub>,c<sup>l</sup><sub>1</sub>, c<sup>h</sup><sub>1</sub>, r<sub>2</sub>),···,
+        (s<sub>H-1</sub>,a<sub>H-1</sub>, c<sup>l</sup><sub>H-1</sub>, c<sup>h</sup><sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.
+    </p>
+
+    <p>
+        <b>c<sup>l</sup><sub>t</sub></b> represents the <b>low level</b><i> advice</i> while <b>c<sup>h</sup><sub>t</sub></b>
+        represents the
+        <b>high level, more complex</b> type of <i>advice</i>.
+    </p>
+
+    <p><b>Distillation</b> can be achieved using two types of learning:
+    <ol>
+        <li>using <i>off-policy actor critic</i> learning - the codebase mainly implements this method</li>
+        <li>using <i>on-policy actor critic</i> learning combined with supervised learning of the mapping from
+            <i>low level <b>to</b> high level advice</i> - done in the code extension we implemented
+        </li>
+    </ol>
+    </p>
+    <p>In the first method, the new policy to be learned <b>π<sub>Φ<sub>new</sub></sub></b> is a newly initialized policy. The
+        agent
+        explores the environment using <b>Φ<sub>new</sub></b> but learns off-policy by using <b>θ<sub>grounded</sub></b>.
+        This approach comes with the fact that the exploration/exploitation dilemma is basically <b>reset</b>. The agent
+        is forced to start by
+        randomly exploring again. Having enough trajectories, <b>θ<sub>grounded</sub></b> off loads the grounded knowledge base.
+        Thus the new policy takes advantage of the grounded phase.
+    </p>
+    <p>We tried to tackle the issue of restarting with random exploration in our implementation. We reuse the already existing
+        <b>θ<sub>grounded</sub></b> by learning a mapper from the <i>new</i> type of advice to the <i>old one</i>.
+        Like this, the old policy continues to work because of no change in the structure of parameters.</p>
+    <p>
+        The mapping from <b>c<sup>h</sup><sub>t</sub></b> to <b>c<sup>l</sup><sub>t</sub></b> was learned via supervised learning.
+        Our reasoning was that we can take advantage of the existing pairs <b>(c<sup>h</sup><sub>t</sub>,
+        c<sup>l</sup><sub>t</sub>)</b>
+        that can be learned in a supervised way.</p>
+    <p>Our expectation was then that <b>θ<sub>grounded, high level -> low level</sub></b> would start from a higher
+        baseline than
+        <b>Φ<sub>new</sub></b>. This should be measurable in experiments.
+    </p>
+
+    <p>After this step we have reached our goal of <b>grounding</b> i.e. having </p>
+    <p><b>π<sub>Φ</sub>(&centerdot;|s<sub>t</sub>, τ, <b><u>c<sub>t</sub></u></b>)</b></p>
+    <p>a policy that can accept a tuple of advice of the shape  <b>(c<sup>l</sup><sub>t</sub>, c<sup>h<sub>1</sub></sup><sub>t</sub>, c<sup>h<sub>2</sub></sup><sub>t</sub>, ...)</b>.</p>
+
+
+    <h3>Improvement</h3>
+    <p>The ultimate goal is to obtain a policy</p>
+    <p><b>π<sub>θ</sub>(&centerdot;|s<sub>t</sub>, τ)</b></p>
+    <p>which does not require the coaching functions. The paper uses the already explained <b>distillation</b> technique
+        to learn such a policy.</p>.
+    <p>
+        Distillation can be done either:
+    <ol>
+    <li>by distilling from the <b>grounded policy</b> to <b>another intermediary policy</b> that accepts even more complex,
+            abstract,
+            and sparse type of advice
+        </li>
+        <p>OR</p>
+    <li>by distilling to <b>no advice</b>, achieving advice independence by taking advantage of already known high reward trajectories.</li>
+    </ol>
+    </p>
+
+    <p>Even though the agent collects </p>
+    <p> D = { (s<sub>0</sub>, a<sub>0</sub>, c<sub>0</sub>, r<sub>1</sub>),
+        (s<sub>1</sub>, a<sub>1</sub>,c<sub>1</sub>, r<sub>2</sub>),···,
+        (s<sub>H-1</sub>,a<sub>H-1</sub>, c<sub>H-1</sub>,r<sub>H</sub>)}<sub>j=1</sub><sup>N</sup>.</p>
+
+    <p> the agent optimizes:</p>
+    <p>
+        max<sub>θ</sub> <b>E</b><sub>(s<sub>t</sub>, a<sub>t</sub>, τ)<sub>t</sub>∼D(&centerdot;|s<sub>t</sub>, τ)</sub>
+        [log π<sub>θ</sub>(a<sub>t</sub>|s<sub>t</sub>, τ)]</p>
+    <p>thus eliminating the coaching functions.</p>
+
+
+    <p>The advantage of advice distillation over <i>imitation learning</i> is that the agent accepts a more <b>sparse and
+        abstract</b> type of advice. This allows the agent to generalize better because the advice is invariant to internal
+        distributions shifts of the agent.</p>
+
+    <h3>Evaluation</h3>
+
+    <p>During evaluation let the agent explore using <b>π<sub>θ</sub></b> and compute the actual amount of reward the
+        environment provides. </p>
+
+
+  <h1 id="setup">Experimental setup</h1>
+
+  <p>To test the paper's approach, we compared the method of advice distillation described above with a simple baseline case: training a <b>multi-layer perceptron (mlp)</b> to convert <b>high-level</b> to <b>low-level advice</b>. The basic steps for our method are:</p>
+
+  <ol>
+    <li>Train an mlp to take high-level advice as input and return equivalent low-level advice</li>
+    <li>For the grounding phase, train our agent on low-level advice just like in the paper's method</li>
+    <li>For the distillation phase, keep the agent the same and replace the low-level advice with the mlp's output</li>
+  </ol>
+
+  <p>With this approach, the agent does not have to learn how to follow a new kind of advice because the advice it gets is equivalent to what it was receiving before. Instead, the training between advice types is done in advance by pre-training the mlp.</p>
+
+  <p>We chose this baseline of comparison because the goal of advice distillation is to quickly transfer the already learned knowledge from low-level advice to higher-level advice. As proposed in the original paper and supported by their experiments, this allows the agent to learn faster (both in terms of literal training time and the amount of instruction needed) than it does if it starts with only the high-level advice.</p>
+
+  <p>Our advice-conversion mlp applies the same principle with a very basic architecture, directly mapping high-level onto low-level advice instead of training the agent to follow the high-level advice directly. By comparing the paper's method against this baseline, we can test whether giving the agent access to high-level advice results in better performance, or if a direct advice-mapping to low-level advice is sufficient.</p>
+
+  <p>Our advice-conversion mlp had a 383-value input layer, consisting of a 255-value observation of the environment state and a 128-value advice component, a 128-value hidden layer, and a 2-value output layer. For our experiments, the input advice was offset waypoint (a sparse, high-level advice type), and the label advice was directional (a low-level advice type). Each advice type is a 2-D vector describing the agent's optimal movement. The offset waypoint advice was passed through a fixed-weight mlp to expand it to 128 dimentions before being passed as input to the advice-conversion mlp.</p>
+
+  <p>The training set consisted of observation/offset waypoint advice/direction advice triples. For each triple the waypoint location, agent position and velocity were randomly generated, and the agent's usual offset waypoint and direction teachers were queried to get the input and label respectively.</p>
+
+  <p>Because the high-level advice is sparse, we have to take into account the movement of the agent, which can cause the old offset waypoint to no longer indicate the direction of the true waypoint. Therefore, the correct direction that would be given as low-level advice may not be the same direction given by the old high-level advice. To simulate this, we included each generated waypoint five times in the training set, each with a different random nearby agent position. The offset waypoint advice given was always based on the first position in the set, but the directional advice label was based on the actual current position. This ensures that the agent will not just copy the offset waypoint given but will also take into account the actual state of the environment.</p>
+
+  <p>One weakness of our mlp architecture is that it does not have any memory of previous environmental states. In our input generation the agent positions are independent of each other, but in an actual environment the next position would be based on the current position and velocity and the action taken. We did not include this because we wanted to keep our architecture simple and focused on the advice rather than the environment itself. But having an understanding of previous states and actions is one advantage the advice distillation agent has over this baseline. Future experiments could expand this mlp to take this information into account, for example changing the output to a time series representing the best actions to take over several time steps to reach the waypoint.</p>
+
+  <p>The advice converter was trained using <b>stochastic gradient descent</b> with 5000 batches of 10,000 values each. The step size was initially 0.001 and was annealed to 0.0001 after 100 epochs. After a training time of about 7 hours, the mlp achieved a final loss of about 2.47. See <a href="#results"><i>Results</i></a> for a more detailed analysis of the training loss and its implications for the mlp's performance. During the distillation phase, the offset waypoint advice that would normally be passed directly to the agent was instead run through this mlp, and the mlp's output was passed to the agent instead.</p>
+
+  <p>For our experiment, both our method and the paper's method used the <b>same grounded policy θ<sub>grounded</b>, which was run for 320 iterations on directional advice. For the paper's method, a new policy <b>Φ<sub>new</sub></b> that took offset waypoint advice was created, and <b>θ<sub>grounded</sub></b> was used for off-policy relabeling.</p>
+
+    <p> For our method, <b>θ<sub>grounded</sub></b> was reused and the directional advice was replaced with the output of our pretrained advice-conversion mlp. Our method was run for 900 more iterations, and the paper's method was only run for 440 more iterations before an issue caused the training to stop early. As a result, we focused on the first 440 post-grounding iterations for our analysis.</p>
+
+  <h1 id="results">Results and Discussion</h1>
+
+  <p>We measured the loss (mean squared error) of our advice-conversion mlp during pretraining as an indicator of how well it could approximate the real directional advice.</p>
+
+  <p><img src="https://cdn.discordapp.com/attachments/875837432870879295/1090266920198086716/mlp-loss.png"></p>
+
+  <p>At the end of training, the network's loss was around 2.5. The values in the direction vector were restricted to a range of [-3.8, 3.8], so a loss of 2.5 means the network's output is still relatively inaccurate.</p>
+
+  <p>This seems to be because of the number of weights involved in the network. An earlier version of the advice-training took a 6-value input (just the offset waypoint advice, the agent position, and the agent velocity) and achieved a much better performance, with a loss of 0.5 after only an hour of training. However, this model only worked when the offset waypoint advice was given densely, because it had no way to know the true waypoint location if the offset waypoint given is inaccurate. The current advice converter, while much slower to converge, is able to properly interpret sparsely given advice.</p>
+
+  <p>While we did not have time to train the mlp for longer, its performance was still improving at the end of the pretraining period, so it would likely continue to improve with more training time. Future experiments could confirm this by testing the effects of increased training time, and the effect of a better-converged model on the agent's overall performance.</p>
+
+  <p>We also compared the average reward of the two policies using both the paper's method and ours as a measurement of how well the agents were able to complete the task.</p>
+
+  <p><img src="https://raw.githubusercontent.com/midumitrescu/teachable-rl/main/graph.png"></p>
+
+  <p>Some of the specific reward values are highlighted in the table below:</p>
+
+  <p></p>
+
+  <p><table>
+    <tr>
+      <th>Iteration</th>
+      <th>Original Distillation Reward</th>
+      <th>Our Method Reward</th>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>Grounding Phase (same agent for both methods)</b></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>0.00266</td>
+      <td>0.00266</td>
+    </tr>
+    <tr>
+      <td>100</td>
+      <td>0.06159</td>
+      <td>0.06159</td>
+    </tr>
+    <tr>
+      <td>200</td>
+      <td>0.07142</td>
+      <td>0.07142</td>
+    </tr>
+    <tr>
+      <td>300</td>
+      <td>0.08013</td>
+      <td>0.08013</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><b>Start of Distillation (at iteration 320)</b></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>320</td>
+      <td>0.00533</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>420</td>
+      <td>0.00416</td>
+      <td>0.01886</td>
+    </tr>
+    <tr>
+      <td>520</td>
+      <td>0.00466</td>
+      <td>0.02290</td>
+    </tr>
+    <tr>
+      <td>620</td>
+      <td>0.002</td>
+      <td>0.02207</td>
+    </tr>
+    <tr>
+      <td>720</td>
+      <td>0.00666</td>
+      <td>0.03841</td>
+    </tr>
+  </table></p>
+
+  <p>The agent improves rapidly during the grounding phase, as it it given relatively simple and informative directional advice to follow. When the distillation phase begins, both agents' performances drop. However, while the original distillation agent's performance is as poor as it was at the beginning, the agent using our method is still somewhat better.</p>
+
+  <p>This is consistent with what we would expect given how the agents work and with what we had hoped to measure. The paper's version of the distillation starts with a new agent and a newly-initialized exploration policy, so it essentially has to restart its learning from scratch. (However, the paper shows that learning with the offloaded grounded policy is still faster than starting learning with only the high-level advice. See the next figure for a comparison of advice distillation vs direct learning of offset waypoint advice.) Our version, meanwhile, keeps the same agent and just changes to a new advice type that is trained to match the old advice type, so it retains some of its progress.</p>
+
+  <p><img src="https://cdn.discordapp.com/attachments/875837432870879295/1090784316755292221/WhatsApp_Image_2023-03-30_at_1.46.17_AM.jpeg"><br/>
+  <img src="https://cdn.discordapp.com/attachments/875837432870879295/1090784316482658314/WhatsApp_Image_2023-03-30_at_1.46.26_AM.jpeg", style="width:500px"></p>
+
+  <p>As mentioned above, our mlp was still a relatively inaccurate approximation of the actual low-level advice, explaining the drop that we do see. Presumably, if the mlp was allowed to train longer, this drop would be smaller because the network's output would be closer to the accurate directional advice that the agent is used to recieving. Alternatively, the drop may be due to the policy not having time to be fully grounded. As the new advice types are not as easy to interpret as the old directional advice, the agents do not improve as quickly during the distillation phase, but we would expect to see them converge to a better performance given more iterations to run.</p>
+
+  <p>Our method's ability to switch to a higher-level advice type without a drop in performance may be useful in situations where a smooth transition between advice types is necessary. However, because the mlp's output will currently always be at least somewhat different from the actual best action we suspect that the original advice distillation method will eventually converge to a better performance. While our method accomplishes the basic goal of allowing an agent trained on low-level advice to understand high-level advice using only a simple mlp architecture, more distillation iterations would be needed to compare the long-term performance of the two methods.</p>
+
+  <h1 id="conclusion">Conclusion</h1>
+
+  <p>The point-maze agent learns quickly when given low-level directional advice, but its performance drops when switching to high-level offset waypoint advice at the start of the distillation phase. Because the new advice is an approximation of the old directional advice, our advice-conversion method experiences less of a drop and initially performs better than the paper's advice-distillation method.</p>
+
+  <p><b>Limitations</b></p>
+  <p>The main limitation of our experiment is the limited time we were able to run the grounding, distillation and pre-training processes for. Because of this, we chose to focus on the immediate consequences of the switch in advice type, but we would need more time for an effective comparison of the two methods' convergence speeds or overall performance. More pre-training time would also likely improve the performance of our method's agent because the advice it is receiving would be closer to the directional advice it was grounded on.</p>
+
+  <p>Additionally, our method has some limits that would make it impractical for some cases. First, it needs a large amount of high- and low-level advice to serve as a training dataset, which could be impractical for some cases, for instance if the advice needs to be human-provided. In this case, providing the high and low-level advice pairs for training becomes expensive and having enough data for proper pretraining is implausible. Allowing the advice-conversion mlp to continue to train during the agent's own training would help with this issue, but then would not allow as smooth of a transition as the pre-training does. The pairing of high-level with low-level advice in pairs also would not work in cases where the two advice types do not have a clear relationship. Finally, the methods used to generate the mlp's training data may not reflect the actual environmental conditions (for instance, our training data assumed no walls inside of the maze), which may hurt the agent's performance when using this data.</p>
+
+  <p><b>Future Research Directions</b></p>
+  <p>Simply running the phases of our method for longer would be a good future experiment, allowing the later performance of the two methods to be compared. There are also several tweaks to our method that could be tested in future experiments. The time-convergence tradeoff of the advice-conversion mlp could be explored, and the mlp could be allowed to continue training during the distillation phase or even integrated into the agent's own network rather than being separate. Both the paper's and our methods could also be applied to other types of environments and advice, in order to see if the results hold across environment and advice types.</p>
+
+  <p id="nlp_extension">Finally, we addressed earlier the critique that the advice provided in this experiment is fairly simple and low-bandwidth, just being a 2-D vector. This is not really rich in a comparable way to the advice humans learn from. It would be a very interesting future experiment to have a real natural language processing layer that could parse human language into an advice signal that could be provided to and interpreted by a RL agent. This addition would allow much easier human coaching, as coaches would not need to have a technical background and would not need to provide low-level, possibly cryptic advice, making this paper more relevant to practical situations.</p>
 
 </dt-article>
 
@@ -50,11 +625,180 @@
 </dt-appendix>
 
 <script type="text/bibliography">
-  @article{gregor2015draw,
-    title={DRAW: A recurrent neural network for image generation},
-    author={Gregor, Karol and Danihelka, Ivo and Graves, Alex and Rezende, Danilo Jimenez and Wierstra, Daan},
-    journal={arXivreprint arXiv:1502.04623},
+  @article{watkins2023,
+    title={Teachable Reinforcement Learning via Advice Distillation},
+    author={Olivia Watkins, Trevor Darrell, Pieter Abbeel, Jacob Andreas, Abhishek Gupta},
+    journal={arXivreprint 	arXiv:2203.11197},
+    year={2023},
+    url={https://arxiv.org/pdf/2203.11197.pdf}
+  }
+@book{suttonbarto2020,
+    title={Reinforcement Learning},
+    author={Richard S. Sutton, Anrew G. Barto},
+    publisher={The MIT Press},
+    year={2020},
+    url={http://www.incompleteideas.net/book/RLbook2020.pdf},
+    isbn={ISBN 9780262039246}
+  }
+  @article{mnih2013,
+    title={Playing Atari with Deep Reinforcement Learning},
+    author={Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, Martin Riedmiller},
+    journal={arXivreprint arXiv:1312.5602},
+    year={2013},
+    url={https://arxiv.org/pdf/1312.5602.pdf}
+  }
+  @article{dsilver2017,
+    title={Mastering the game of Go without human knowledge},
+    author={David Silver, Julian Schrittwieser, Karen Simonyan, Ioannis Antonoglou, Aja Huang, Arthur Guez, Thomas Hubert,
+    Lucas Baker, Matthew Lai, Adrian Bolton, Yutian Chen, Timothy Lillicrap, Fan Hui, Laurent Sifre, George van den Driessche, Thore Graepel & Demis Hassabis},
+    journal={Nature 550, 354–359},
+    year={2017},
+    url={https://www.nature.com/articles/nature24270}
+  }
+  @article{hessel2017,
+    title={Rainbow: Combining Improvements in Deep Reinforcement Learning},
+    author={Matteo Hessel, Joseph Modayil, Hado van Hasselt, Tom Schaul, Georg Ostrovski, Will Dabney, Dan Horgan, Bilal Piot, Mohammad Azar, David Silver},
+    journal={arXivreprint arXiv:1710.02298},
+    year={2017},
+    url={https://arxiv.org/pdf/1710.02298.pdf}
+  }
+  @article{lynn2019,
+    title={How humans learn and represent networks},
+    author={Christopher W. Lynn, Danielle S. Bassett},
+    journal={arXivreprint arXiv:1909.07186},
+    year={2019},
+    url={https://arxiv.org/pdf/1909.07186.pdf}
+  }
+  @article{barto90,
+    title={On the Computational Economics of Reinforcement Learning},
+    author={Andrew G. Barto, Santinder Pal Singh},
+    journal={Proceedings of the 1990 Summer School},
+    year={1990},
+    url={https://web.eecs.umich.edu/~baveja/Papers/summerschool.pdf}
+  }
+  @article{korteling2021,
+    title={Human- versus Artificial Intelligence},
+    author={E. Korteling, G. C. van de Boer-Visschedijk, R. A. M. Blankendaal, R. C. Boonekamp, A. R. Eikelboom},
+    journal={Frontiers in Artificial Intelligence},
+    year={2021},
+    url={https://www.frontiersin.org/articles/10.3389/frai.2021.622364/pdf}
+  }
+  @article{lyoms2007,
+    title={The hidden structure of overimitation},
+    author={Derek E Lyons 1, Andrew G Young, Frank C Keil},
+    journal={PubMed PMID: 18056814 PMCID: PMC2148370},
+    year={2007},
+    url={https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2148370/pdf/zpq19751.pdf}
+  }
+  @article{chopra2019,
+    title={The first crank of the cultural ratchet: Learning and transmitting concepts through language},
+    author={Sahila Chopra, Michael Henry Tessler, Noah D. Goodman},
+    journal={CogSci},
+    year={2019},
+    url={https://www.semanticscholar.org/paper/The-first-crank-of-the-cultural-ratchet%3A-Learning-Chopra-Tessler/68303e377b6999f5634e71e7c1bd709c10fcef33}
+  }
+  @article{juarez2016,
+    title={The Role of Dopamine and Its Dysfunction as a Consequence of Oxidative Stress},
+    author={Hugo Juárez Olguín, David Calderón Guzmán, Ernestina Hernández García, Gerardo Barragán Mejía},
+    journal={Oxidative Medicine and Cellular Longevity Volume 2016, Article ID 9730467},
+    year={2016},
+    url={https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4684895/pdf/OMCL2016-9730467.pdf}
+  }
+  @article{bayer2005,
+    title={Midbrain dopamine neurons encode a quantitative reward prediction error signal},
+    author={Hannah M Bayer, Paul W Glimcher},
+    journal={Pub Med Neuron PMID: 15996553 PMCID: PMC1564381},
+    year={2005},
+    url={https://pubmed.ncbi.nlm.nih.gov/15996553/}
+  }
+  @article{schultz1997,
+    title={A Neural Substrate of Prediction and Reward},
+    author={W. Schultz, P. Dayan, P. R. Montague},
+    journal={Science 14 Mar 1997 Vol 275, Issue 5306 pp. 1593-1599},
+    year={1997},
+    url={https://www.science.org/doi/abs/10.1126/science.275.5306.1593}
+  }
+  @article{munos2016,
+    title={Safe and efficient off-policy reinforcement learning},
+    author={Munos, R., Stepleton, T., Harutyunyan, A., Bellemare,M},
+    journal={Advances in Neural Information Processing Systems, pp. 1054–1062},
+    year={2016},
+    url={https://proceedings.neurips.cc/paper/2016/file/c3992e9a68c5ae12bd18488bc579b30d-Paper.pdf}
+  }
+  @article{precup2001,
+    title={Off-policy temporal-difference learning with function approximation},
+    author={Munos, R., Stepleton, T., Harutyunyan, A., Bellemare,M},
+    journal={International Conference on Machine Learning, pp. 417–424},
+    year={2001},
+    url={http://incompleteideas.net/papers/PSD-01.pdf}
+  }
+  @article{arumugam2019,
+    title={Deep Reinforcement Learning from Policy-Dependent Human Feedback},
+    author={D. Arumugam, J. K. Lee, S. Saskin, M. L. Littman},
+    journal={arXivreprint arXiv:1902.04257},
+    year={2019},
+    url={https://arxiv.org/pdf/1902.04257.pdf}
+  }
+  @article{macglashan2017,
+    title={Interactive Learning from Policy-Dependent Human Feedback},
+    author={James MacGlashan, Mark K Ho, Robert Loftin, Bei Peng, Guan Wang, David Roberts, Matthew E. Taylor, Michael L. Littman},
+    journal={arXivreprint arXiv:1701.06049},
+    year={2017},
+    url={https://arxiv.org/pdf/1701.06049.pdf}
+  }
+  @article{morgan2015,
+    title={Experimental evidence for the co-evolution of hominin tool-making teaching and language},
+    author={T. J. H. Morgan, N. T. Uomini, L. E. Rendell, L. Chouinard-Thuly, S. E. Street, H. M. Lewis, C. P. Cross, C. Evans, R. Kearney, I. de la Torre, A. Whiten & K. N. Laland},
+    journal={Nat Commun 6, 6029},
     year={2015},
-    url={https://arxiv.org/pdf/1502.04623.pdf}
+    url={https://www.nature.com/articles/ncomms7029.pdf}
+  }
+  @article{waxman1995,
+    title={Words as invitations to form categories: evidence from 12- to 13-month-old infants},
+    author={S R Waxman, D B Markow},
+    journal={Cogn Psychol. doi: 10.1006/cogp.1995.1016.},
+    year={1995},
+    url={https://www.sciencedirect.com/science/article/abs/pii/S001002858571016X}
+  }
+  @article{hussein2017,
+    title={Imitation Learning: A Survey of Learning Methods},
+    author={A. Hussein, M. Medhat Gaber, E. Elyan, C. Jayne},
+    journal={ACM Computing Surveys Volume 50 Issue 2 Article No.: 21 pp 1–35},
+    year={3017},
+    url={https://dl.acm.org/doi/10.1145/3054912}
+  }
+  @article{ziebart2008,
+    title={Maximum entropy inverse reinforcement learning},
+    author={B. D. Ziebart, A. L. Maas, J. A. Bagnell, and A. K. Dey},
+    journal={AAAI},
+    year={2008},
+    url={http://ai.stanford.edu/~amaas/papers/amaas_aaai.pdf}
+  }
+  @article{ross2010,
+    title={A Reduction of Imitation Learning and Structured Prediction to No-Regret Online Learning},
+    author={S. Ross, G. J. Gordon, J. A. Bagnell},
+    journal={arXivreprint arXiv:1011.0686},
+    year={2010},
+    url={https://arxiv.org/pdf/1011.0686.pdf}
+  }
+  @article{christiano2023,
+    title={Deep reinforcement learning from human preferences},
+    author={P. Christiano, J. Leike, T. B. Brown, M. Martic, S. Legg, D. Amodei},
+    journal={arXivreprint 	arXiv:1706.03741},
+    year={2023},
+    url={https://arxiv.org/pdf/1706.03741.pdf}
+  }
+  @article{knox2008,
+    title={TAMER: Training an Agent Manually via Evaluative Reinforcement},
+    author={W. B. Knox, P. Stone},
+    journal={IEEE 7th International Conference on Development and Learning},
+    year={2008},
+    url={https://www.cs.utexas.edu/~ai-lab/pubs/ICDL08-knox.pdf}
   }
 </script>
+
+<style>
+  table, th, td {
+    border: 1px solid;
+  }
+</style>
